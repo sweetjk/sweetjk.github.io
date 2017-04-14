@@ -1,0 +1,1037 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="React Native 参考官方文档TutorialReact Native is like React, but it uses native components instead of web components as building blocks. So to understand the basic structure of a React Native app, you need">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RN基础">
+<meta property="og:url" content="http://yoursite.com/2017/04/14/RN基础/index.html">
+<meta property="og:site_name" content="sweetjk">
+<meta property="og:description" content="React Native 参考官方文档TutorialReact Native is like React, but it uses native components instead of web components as building blocks. So to understand the basic structure of a React Native app, you need">
+<meta property="og:updated_time" content="2017-04-14T06:55:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RN基础">
+<meta name="twitter:description" content="React Native 参考官方文档TutorialReact Native is like React, but it uses native components instead of web components as building blocks. So to understand the basic structure of a React Native app, you need">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'A08VNNLS62',
+      apiKey: '46ff6516efd9f6fb932c001f52a6403f',
+      indexName: 'Git',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/14/RN基础/"/>
+
+
+
+
+
+  <title> RN基础 | sweetjk </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sweetjk</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/14/RN基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sweetjk">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sweetjk">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RN基础
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-14T14:52:11+08:00">
+                2017-04-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/14/RN基础/" class="leancloud_visitors" data-flag-title="RN基础">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="React-Native-参考官方文档"><a href="#React-Native-参考官方文档" class="headerlink" title="React Native 参考官方文档"></a>React Native <a href="https://facebook.github.io/react-native/docs" target="_blank" rel="external">参考官方文档</a></h1><h2 id="Tutorial"><a href="#Tutorial" class="headerlink" title="Tutorial"></a>Tutorial</h2><p>React Native is like React, but it uses native components instead of web components as building blocks. So to understand the basic structure of a React Native app, you need to understand some of the basic React concepts, like JSX, components, state, and props. If you already know React, you still need to learn some React-Native-specific stuff, like the native components. This tutorial is aimed at all audiences, whether you have React experience or not.</p>
+<p>Let’s do this thing.</p>
+<h3 id="HelloWorld"><a href="#HelloWorld" class="headerlink" title="HelloWorld"></a>HelloWorld</h3><p>In accordance with the ancient traditions of our people, we must first build an app that does nothing except say “Hello world”. Here it is:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, Text &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class HelloWorldApp extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;Text&gt;Hello world!&lt;/Text&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;HelloWorldApp&apos;, () =&gt; HelloWorldApp);</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>If you are feeling curious, you can play around with sample code directly in the web simulators. You can also paste it into your index.ios.js or index.android.js file to create a real app on your local machine.</p>
+<h3 id="What’s-going-on-here"><a href="#What’s-going-on-here" class="headerlink" title="What’s going on here?"></a>What’s going on here?</h3><p>Some of the things in here might not look like JavaScript to you. Don’t panic. This is the future.</p>
+<p>First of all, ES2015 (also known as ES6) is a set of improvements to JavaScript that is now part of the official standard, but not yet supported by all browsers, so often it isn’t used yet in web development. React Native ships with ES2015 support, so you can use this stuff without worrying about compatibility. import, from, class, extends, and the () =&gt; syntax in the example above are all ES2015 features. If you aren’t familiar with ES2015, you can probably pick it up just by reading through sample code like this tutorial has. If you want, this page has a good overview of ES2015 features.</p>
+<p>The other unusual thing in this code example is <text>Hello world!</text>. This is JSX - a syntax for embedding XML within JavaScript. Many frameworks use a special templating language which lets you embed code inside markup language. In React, this is reversed. JSX lets you write your markup language inside code. It looks like HTML on the web, except instead of web things like <div> or <span>, you use React components. In this case, <text> is a built-in component that just displays some text.</text></span></div></p>
+<h3 id="Component-and-AppRegistry"><a href="#Component-and-AppRegistry" class="headerlink" title="Component and AppRegistry"></a>Component and AppRegistry</h3><p>So this code is defining HelloWorldApp, a new Component, and it’s registering it with the AppRegistry. When you’re building a React Native app, you’ll be making new components a lot. Anything you see on the screen is some sort of component. A component can be pretty simple - the only thing that’s required is a render function which returns some JSX to render.</p>
+<p>The AppRegistry just tells React Native which component is the root one for the whole application. You won’t be thinking about AppRegistry a lot - there will probably just be one call to AppRegistry.registerComponent in your whole app. It’s included in these examples so you can paste the whole thing into your index.ios.js or index.android.js file and get it running.</p>
+<blockquote>
+<p>React Native 的重点是改变视图代码编写的方式</p>
+<h3 id="异步执行"><a href="#异步执行" class="headerlink" title="异步执行"></a>异步执行</h3><p>JavaScript 应用代码和原生平台之间所有的操作都是异步执行，并且原生模块也可以使用额外线程。这意味着我 们可以解码主线程图像，并将其在后台保存至磁盘，在不阻塞 UI 的情况下进行文本和布局的估量计算，等 等。因此，React Native 应用程序的流畅度和响应性都非常好。通信也是完全可序列化的，当运行完整的应用程 序时，这允许我们使用 Chrome Developer Tools 来调试 JavaScript，或者在模拟器中，或者在真机上。</p>
+<h3 id="触摸处理"><a href="#触摸处理" class="headerlink" title="触摸处理"></a>触摸处理</h3><p>iOS 有一个非常强大的系统称为 Responder Chain，可以用来响应复杂视图层级中的事件，但是在 Web 中并没有 类似功能的工具。React Native 可实现类似的响应系统并提供高水平的组件，比如 TouchableHighlight，无需 额外配置即可与滚动视图和其他元素适度整合。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">var React = require(&apos;react-native&apos;);</div><div class="line">var &#123; ScrollView, TouchableHighlight, Text &#125; = React;</div><div class="line">var TouchDemo = React.createClass(&#123;</div><div class="line">render: function() &#123;</div><div class="line">return (</div><div class="line">&lt;ScrollView&gt;</div><div class="line">&lt;TouchableHighlight onPress=&#123;() =&gt; console.log(&apos;pressed&apos;)&#125;&gt;</div><div class="line">&lt;Text&gt;Proper Touch Handling&lt;/Text&gt;</div><div class="line">&lt;/TouchableHighlight&gt;</div><div class="line">&lt;/ScrollView&gt;</div><div class="line">);</div><div class="line">&#125;, &#125;);</div></pre></td></tr></table></figure>
+<h2 id="React-与-React-Native"><a href="#React-与-React-Native" class="headerlink" title="React 与 React Native"></a>React 与 React Native</h2><blockquote>
+<p>.When you’re building a React Native app, you’ll be making new components a lot. Anything you see on the screen is some sort of component. A component can be pretty simple - the only thing that’s required is a render function which returns some JSX to render.</p>
+<p>当你创建React Native app的时候，你将会创建一个新的组件。屏幕上的任何东西都可以分类为组件。一个组件可以非常的简单。仅仅要求实现render函数，在render函数里JSX 进行渲染。render函数中含有return函数。组件中必须有的是render函数</p>
+<p>The AppRegistry just tells React Native which component is the root one for the whole application. You won’t be thinking about AppRegistry a lot - there will probably just be one call to AppRegistry.registerComponent in your whole app. It’s included in these examples so you can paste the whole thing into your index.ios.js or index.android.js file and get it running.</p>
+<p>AppRegistry的作用是告诉  React Native 对于整个应用来说，那个是根组件</p>
+<p>Most components can be customized when they are created, with different parameters. These creation parameters are called props.</p>
+</blockquote>
+<h2 id="props"><a href="#props" class="headerlink" title="props"></a>props</h2><blockquote>
+<p>大多数组件在被创建的时候是可以通过不同的参数被自定义的。这些被创建的参数被称为props 属性</p>
+<p>For example, one basic React Native component is the Image. When you create an image, you can use a prop named source to control what image it shows.</p>
+<p>例如，一个基础的React Native 组件 Image，当你创建一个图片时，你可以使用 它的 source属性来控制它显示什么图片<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, Image &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class Bananas extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">let pic = &#123;</div><div class="line">uri: &apos;https://upload.wikimedia.org/wikipedia/commons/d/de/Bananavarieties.jpg&apos;</div><div class="line">&#125;;</div><div class="line">return (</div><div class="line">&lt;Image source=&#123;pic&#125; style=&#123;&#123;width: 193, height: 110&#125;&#125;/&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;Bananas&apos;, () =&gt; Bananas);</div></pre></td></tr></table></figure></p>
+<p>Notice that {pic} is surrounded by braces, to embed the variable pic into JSX. You can put any JavaScript expression inside braces in JSX.</p>
+<p>注意 {pic} 是被大括号包围的，目的是在JSX中能够使用。在JSX中 你可以把任何的JavaScript 表达式放在括号里面</p>
+<p>Your own components can also use props. This lets you make a single component that is used in many different places in your app, with slightly different properties in each place. Just refer to this.props in your render function. Here’s an example:</p>
+<p>你自定义的组件同样可以使用属性props，</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, Text, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class Greeting extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;Text&gt;Hello &#123;this.props.name&#125;!&lt;/Text&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class LotsOfGreetings extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;View style=&#123;&#123;alignItems: &apos;center&apos;&#125;&#125;&gt;</div><div class="line">&lt;Greeting name=&apos;Rexxar&apos; /&gt;</div><div class="line">&lt;Greeting name=&apos;Jaina&apos; /&gt;</div><div class="line">&lt;Greeting name=&apos;Valeera&apos; /&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;LotsOfGreetings&apos;, () =&gt; LotsOfGreetings);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Using name as a prop lets us customize the Greeting component, so we can reuse that component for each of our greetings. This example also uses the Greeting component in JSX, just like the built-in components. The power to do this is what makes React so cool - if you find yourself wishing that you had a different set of UI primitives to work with, you just invent new ones.</p>
+<p>使用name 最为一个属性 使我们能够自定义Greeting 组件，因此我们可以复用此组件于我们的greetings。这个例子也说明在JSX中使用Greeting组件的方法，想创建组件一样。这个功能是React看起来是非常的酷的。如果你发现自己希望有一个不一样的UI来工作，你仅仅需要定制一个就行了</p>
+</blockquote>
+<h2 id="State"><a href="#State" class="headerlink" title="State"></a>State</h2><blockquote>
+<p>There are two types of data that control a component: props and state. props are set by the parent and they are fixed throughout the lifetime of a component. For data that is going to change, we have to use state.</p>
+<p>控制或管理一个组件的有两种数据类型：props（属性） 和 state（状态）<br>props 是被父组件设置且通过一个组件的生命周期来修改的。<br>对于将要改变的数据，我们必须使用state</p>
+<p>In general, you should initialize state in the constructor, and then call setState when you want to change it.</p>
+<p>通常，你应该在constructor 方法中（生命周期方法）初始化state（initialize state）， 调用setState方法来改变它。</p>
+<p>For example, let’s say we want to make text that blinks all the time. The text itself gets set once when the blinking component gets created, so the text itself is a prop. The “whether the text is currently on or off” changes over time, so that should be kept in state.</p>
+<p>举例，比如说我们想要是文字一直闪烁。在闪烁组件被创建的时候文字标签本身仅仅被设置一次，因此文字本身是一个prop（属性），当前文字的的开关的改变，应该是保存在state上的。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, Text, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class Blink extends Component &#123;</div><div class="line">constructor(props) &#123;</div><div class="line">super(props);</div><div class="line">this.state = &#123;showText: true&#125;;</div><div class="line"></div><div class="line">// Toggle the state every second</div><div class="line">setInterval(() =&gt; &#123;</div><div class="line">this.setState(&#123; showText: !this.state.showText &#125;);</div><div class="line">&#125;, 1000);</div><div class="line">&#125;</div><div class="line"></div><div class="line">render() &#123;</div><div class="line">let display = this.state.showText ? this.props.text : &apos; &apos;;</div><div class="line">return (</div><div class="line">&lt;Text&gt;&#123;display&#125;&lt;/Text&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">class BlinkApp extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;View&gt;</div><div class="line">&lt;Blink text=&apos;I love to blink&apos; /&gt;</div><div class="line">&lt;Blink text=&apos;Yes blinking is so great&apos; /&gt;</div><div class="line">&lt;Blink text=&apos;Why did they ever take this out of HTML&apos; /&gt;</div><div class="line">&lt;Blink text=&apos;Look at me look at me look at me&apos; /&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;BlinkApp&apos;, () =&gt; BlinkApp);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>In a real application, you probably won’t be setting state with a timer. You might set state when you have new data arrive from the server, or from user input. You can also use a state container like Redux to control your data flow. In that case you would use Redux to modify your state rather than calling setState directly.</p>
+<p>在一个真正的应用当中，你也许不会设置一个定时器的state，你可能在请求服务端到新数据或者用户输入的时候设置state。你也可以这样想使用Reduce来控制你的数据流使用state。如果那样的话，你将会使用Redux来改变你的state 而不是 直接调用setSate</p>
+</blockquote>
+<p>State works the same way as it does in React, so for more details on handling state, you can look at the React.Component API.</p>
+<p>At this point, you might be annoyed that most of our examples so far use boring default black text. To make things more beautiful, you will have to learn about Style.</p>
+<h2 id="style"><a href="#style" class="headerlink" title="style"></a>style</h2><blockquote>
+<p>With React Native, you don’t use a special language or syntax for defining styles. You just style your application using JavaScript. All of the core components accept a prop named style. The style names and values usually match how CSS works on the web, except names are written using camel casing, e.g backgroundColor rather than background-color.</p>
+<p>对于ReactNative， 你无需使用特别的语言和语法来定义styles（样式），你只需要使用JavaScript语言来进行设计style（样式）。所有的核心组件有一个叫做style的属性。<br>样式的命名和赋值通常和在web上的CSS的怎样工作是相匹配的。除了命名是用驼峰的写法之外，e.g backgroudColor 而不是 background-color</p>
+<p>The style prop can be a plain old JavaScript object. That’s the simplest and what we usually use for example code. You can also pass an array of styles - the last style in the array has precedence, so you can use this to inherit styles.</p>
+<p>style 属性可以是普通的JavaScript对象.这是最简单的也是我们通常使用的代码例子。<br>您还可以传递样式数组，数组中的最后一个样式具有优先级，因此，您可以使用此继承样式。</p>
+<p>As a component grows in complexity, it is often cleaner to use StyleSheet.create to define several styles in one place. Here’s an example:</p>
+<p>随着组件越来越复杂，通常会使用SryleSheet来是它看起来清洁。创建一个用来在同一个地方定义多个样式。这里有个例子</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, StyleSheet, Text, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class LotsOfStyles extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;View&gt;</div><div class="line">&lt;Text style=&#123;styles.red&#125;&gt;just red&lt;/Text&gt;</div><div class="line">&lt;Text style=&#123;styles.bigblue&#125;&gt;just bigblue &lt;Text&gt;hel&lt;/Text&gt;&lt;/Text&gt;</div><div class="line">&lt;Text style=&#123;[styles.bigblue, styles.red]&#125;&gt;bigblue, then red&lt;/Text&gt;</div><div class="line">&lt;Text style=&#123;[styles.red, styles.bigblue]&#125;&gt;red, then bigblue&lt;/Text&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const styles = StyleSheet.create(&#123;</div><div class="line">bigblue: &#123;</div><div class="line">color: &apos;blue&apos;,</div><div class="line">fontWeight: &apos;bold&apos;,</div><div class="line">fontSize: 30,</div><div class="line">&#125;,</div><div class="line">red: &#123;</div><div class="line">color: &apos;red&apos;,</div><div class="line">&#125;,</div><div class="line">&#125;);</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;LotsOfStyles&apos;, () =&gt; LotsOfStyles);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>One common pattern is to make your component accept a style prop which in turn is used to style subcomponents. You can use this to make styles “cascade” the way they do in CSS.</p>
+<p>一个常见的模式是你的组件style属性同样适用于它的子组件，你可以使用这个样式来“级联”他们在CSS中做的方式。</p>
+</blockquote>
+<p>There are a lot more ways to customize text style. Check out the Text component reference for a complete list.</p>
+<p>&gt;</p>
+<p>Now you can make your text beautiful. The next step in becoming a style master is to learn how to control component size.</p>
+<h2 id="Height-and-Width"><a href="#Height-and-Width" class="headerlink" title="Height and Width"></a>Height and Width</h2><blockquote>
+<p>A component’s height and width determine its size on the screen.<br>一个组件的height和width 决定了它在屏幕上的尺寸</p>
+</blockquote>
+<h4 id="Fixed-Dimensions"><a href="#Fixed-Dimensions" class="headerlink" title="Fixed Dimensions"></a>Fixed Dimensions</h4><blockquote>
+<p>The simplest way to set the dimensions of a component is by adding a fixed width and height to style. All dimensions in React Native are unitless, and represent density-independent pixels.</p>
+<p>给组件的style添加width和height是设置组件尺寸最简单的方式。所有在React Native中的尺寸都是无单位的。代表（密度无关的）像素。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class FixedDimensionsBasics extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;View&gt;</div><div class="line">&lt;View style=&#123;&#123;width: 50, height: 50, backgroundColor: &apos;powderblue&apos;&#125;&#125; /&gt;</div><div class="line">&lt;View style=&#123;&#123;width: 100, height: 100, backgroundColor: &apos;skyblue&apos;&#125;&#125; /&gt;</div><div class="line">&lt;View style=&#123;&#123;width: 150, height: 150, backgroundColor: &apos;steelblue&apos;&#125;&#125; /&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;AwesomeProject&apos;, () =&gt; FixedDimensionsBasics);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Setting dimensions this way is common for components that should always render at exactly the same size, regardless of screen dimensions.</p>
+<p>这种设置组件尺寸的方式是最常见的方式，应始终呈现在完全相同的大小，无论屏幕尺寸</p>
+</blockquote>
+<h4 id="Flex-Dimensions"><a href="#Flex-Dimensions" class="headerlink" title="Flex Dimensions"></a>Flex Dimensions</h4><blockquote>
+<p>Use flex in a component’s style to have the component expand and shrink dynamically based on available space. Normally you will use flex: 1, which tells a component to fill all available space, shared evenly amongst each other component with the same parent. The larger the flex given, the higher the ratio of space a component will take compared to its siblings.</p>
+<p>在组件的样式中使用Flex以基于可用的空间动态地扩展和收缩组件。通常，你将使用Flex：1，它告诉一个组件来填充所有可用的空间，在同一个父组中的每个组件中均匀共享。给定的Flex越大，一个组件的空间比例就越高。</p>
+<p>A component can only expand to fill available space if its parent has dimensions greater than 0. If a parent does not have either a fixed width and height or flex, the parent will have dimensions of 0 and the flex children will not be visible.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class FlexDimensionsBasics extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">// Try removing the `flex: 1` on the parent View.</div><div class="line">// The parent will not have dimensions, so the children can&apos;t expand.</div><div class="line">// What if you add `height: 300` instead of `flex: 1`?</div><div class="line">&lt;View style=&#123;&#123;flex: 1&#125;&#125;&gt;</div><div class="line">&lt;View style=&#123;&#123;flex: 1, backgroundColor: &apos;powderblue&apos;&#125;&#125; /&gt;</div><div class="line">&lt;View style=&#123;&#123;flex: 2, backgroundColor: &apos;skyblue&apos;&#125;&#125; /&gt;</div><div class="line">&lt;View style=&#123;&#123;flex: 3, backgroundColor: &apos;steelblue&apos;&#125;&#125; /&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;AwesomeProject&apos;, () =&gt; FlexDimensionsBasics);</div></pre></td></tr></table></figure>
+<h2 id="Layout-with-Flexbox"><a href="#Layout-with-Flexbox" class="headerlink" title="Layout with Flexbox"></a>Layout with Flexbox</h2><p>A component can specify the layout of its children using the flexbox algorithm. Flexbox is designed to provide a consistent layout on different screen sizes.</p>
+<p>You will normally use a combination of flexDirection, alignItems, and justifyContent to achieve the right layout.</p>
+<blockquote>
+<p>Flexbox works the same way in React Native as it does in CSS on the web, with a few exceptions. The defaults are different, with flexDirection defaulting to column instead of row, and the flex parameter only supporting a single number.</p>
+</blockquote>
+<h2 id="Handling-Text-Input"><a href="#Handling-Text-Input" class="headerlink" title="Handling Text Input"></a>Handling Text Input</h2><blockquote>
+<p>TextInput is a basic component that allows the user to enter text. It has an onChangeText prop that takes a function to be called every time the text changed, and an onSubmitEditing prop that takes a function to be called when the text is submitted.</p>
+</blockquote>
+<p>For example, let’s say that as the user types, you’re translating their words into a different language. In this new language, every single word is written the same way: 🍕. So the sentence “Hello there Bob” would be translated as “🍕🍕🍕”.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, Text, TextInput, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class PizzaTranslator extends Component &#123;</div><div class="line">constructor(props) &#123;</div><div class="line">super(props);</div><div class="line">this.state = &#123;text: &apos;&apos;&#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;View style=&#123;&#123;padding: 10&#125;&#125;&gt;</div><div class="line">&lt;TextInput</div><div class="line">style=&#123;&#123;height: 40&#125;&#125;</div><div class="line">placeholder=&quot;Type here to translate!&quot;</div><div class="line">onChangeText=&#123;(text) =&gt; this.setState(&#123;text&#125;)&#125;</div><div class="line">/&gt;</div><div class="line">&lt;Text style=&#123;&#123;padding: 10, fontSize: 42&#125;&#125;&gt;</div><div class="line">&#123;this.state.text.split(&apos; &apos;).map((word) =&gt; word &amp;&amp; &apos;🍕&apos;).join(&apos; &apos;)&#125;</div><div class="line">&lt;/Text&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">AppRegistry.registerComponent(&apos;PizzaTranslator&apos;, () =&gt; PizzaTranslator);</div></pre></td></tr></table></figure>
+<p>In this example, we store text in the state, because it changes over time.</p>
+<p>There are a lot more things you might want to do with a text input. For example, you could validate the text inside while the user types. For more detailed examples, see the React docs on controlled components, or the reference docs for TextInput.</p>
+<p>Text input is probably the simplest example of a component whose state naturally changes over time. Next, let’s look at another type of component like this one that controls layout, and learn about the ScrollView.</p>
+<h2 id="ScrollView"><a href="#ScrollView" class="headerlink" title="ScrollView"></a>ScrollView</h2><p>The ScrollView is a generic scrolling container that can host multiple components and views. The scrollable items need not be homogenous, and you can scroll both vertically and horizontally (by setting the horizontal property).</p>
+<blockquote>
+<p>ScrollView是一个通用的滚动容器可以承载多个组件和视图,滚动项目不需要均匀的，你可以同时在垂直和水平滚动（通过设置横向性能）。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, ScrollView, Image, Text &#125; from &apos;react-native&apos;</div><div class="line"></div><div class="line">class IScrolledDownAndWhatHappenedNextShockedMe extends Component &#123;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;ScrollView&gt;</div><div class="line">&lt;Text style=&#123;&#123;fontSize:96&#125;&#125;&gt;Scroll me plz&lt;/Text&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Text style=&#123;&#123;fontSize:96&#125;&#125;&gt;If you like&lt;/Text&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Text style=&#123;&#123;fontSize:96&#125;&#125;&gt;Scrolling down&lt;/Text&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Text style=&#123;&#123;fontSize:96&#125;&#125;&gt;What&apos;s the best&lt;/Text&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Text style=&#123;&#123;fontSize:96&#125;&#125;&gt;Framework around?&lt;/Text&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Image source=&#123;require(&apos;./img/favicon.png&apos;)&#125; /&gt;</div><div class="line">&lt;Text style=&#123;&#123;fontSize:80&#125;&#125;&gt;React Native&lt;/Text&gt;</div><div class="line">&lt;/ScrollView&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">AppRegistry.registerComponent(</div><div class="line">&apos;IScrolledDownAndWhatHappenedNextShockedMe&apos;,</div><div class="line">() =&gt; IScrolledDownAndWhatHappenedNextShockedMe);</div></pre></td></tr></table></figure>
+<h2 id="ListView"><a href="#ListView" class="headerlink" title="ListView"></a>ListView</h2><p>The ListView component displays a scrolling list of changing, but similarly structured, data.</p>
+<p>ListView 组件展示一个不断改变的滚动数据，类似于结构体数据</p>
+<p>ListView works well for long lists of data, where the number of items might change over time. Unlike the more generic ScrollView, the ListView only renders elements that are currently showing on the screen, not all the elements at once.</p>
+<p>ListView 可以适用于非常大的数组数据。它的数组的单元可能会随着时间改变，不像ScollView一样数据是固定的。ListView只呈现正在屏幕上显示的元素，并不是一次展示所有的元素。</p>
+<p>The ListView component requires two props: dataSource and renderRow. dataSource is the source of information for the list. renderRow takes one item from the source and returns a formatted component to render.<br>ListView 组件需要实现两个属性方法： dataSource 和 renderRow。<br>dataSource 是列表信息的数据源。renderRow 从source里获取一条数据来进行渲染展示的组件。</p>
+<p>This example creates a simple ListView of hardcoded data. It first initializes the dataSource that will be used to populate the ListView. Each item in the dataSource is then rendered as a Text component. Finally it renders the ListView and all Text components.<br>此示例创建一个简单的固定数据的列表。首先初始化数据源将被用来填充列表。在每个项目的数据源然后呈现为一个文本组件。最后，它渲染ListView和所有文本组件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">import React, &#123; Component &#125; from &apos;react&apos;;</div><div class="line">import &#123; AppRegistry, ListView, Text, View &#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class ListViewBasics extends Component &#123;</div><div class="line">// Initialize the hardcoded data</div><div class="line">constructor(props) &#123;</div><div class="line">super(props);</div><div class="line">const ds = new ListView.DataSource(&#123;rowHasChanged: (r1, r2) =&gt; r1 !== r2&#125;);</div><div class="line">this.state = &#123;</div><div class="line">dataSource: ds.cloneWithRows([</div><div class="line">&apos;John&apos;, &apos;Joel&apos;, &apos;James&apos;, &apos;Jimmy&apos;, &apos;Jackson&apos;, &apos;Jillian&apos;, &apos;Julie&apos;, &apos;Devin&apos;</div><div class="line">])</div><div class="line">&#125;;</div><div class="line">&#125;</div><div class="line">render() &#123;</div><div class="line">return (</div><div class="line">&lt;View style=&#123;&#123;flex: 1, paddingTop: 22&#125;&#125;&gt;</div><div class="line">&lt;ListView</div><div class="line">dataSource=&#123;this.state.dataSource&#125;</div><div class="line">renderRow=&#123;(rowData) =&gt; &lt;Text&gt;&#123;rowData&#125;&lt;/Text&gt;&#125;</div><div class="line">/&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// App registration and rendering</div><div class="line">AppRegistry.registerComponent(&apos;ListViewBasics&apos;, () =&gt; ListViewBasics);</div></pre></td></tr></table></figure>
+<p>One of the most common uses for a ListView is displaying data that you fetch from a server. To do that, you will need to learn about networking in React Native.</p>
+<p>ListView 的最常用于展示从服务器端请求的数据。因此，你将需要学习关于RN当中网络的知识</p>
+<h2 id="NetWorking"><a href="#NetWorking" class="headerlink" title="NetWorking"></a>NetWorking</h2><p>Many mobile apps need to load resources from a remote URL. You may want to make a POST request to a REST API, or you may simply need to fetch a chunk of static content from another server.</p>
+<p>很多移动应用需要从远程URL下载资源，你可能会想到用postqu请求Rest API， 或者您只需要从另一台服务器获取静态内容的一大块。</p>
+<h3 id="Using-Fetch"><a href="#Using-Fetch" class="headerlink" title="Using Fetch"></a>Using Fetch</h3><p>React Native provides the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" target="_blank" rel="external">Fetch API</a> for your networking needs. Fetch will seem familiar if you have used XMLHttpRequest or other networking APIs before. You may refer to MDN’s guide on <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch" target="_blank" rel="external">Using Fetch</a> for additional information.</p>
+<p>Making requests </p>
+<p>In order to fetch content from an arbitrary URL, just pass the URL to fetch:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fetch(&apos;https://mywebsite.com/mydata.json&apos;)</div></pre></td></tr></table></figure>
+<p>Fetch also takes an optional second argument that allows you to customize the HTTP request. You may want to specify additional headers, or make a POST request:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">fetch(&apos;https://mywebsite.com/endpoint/&apos;, &#123;</div><div class="line">method: &apos;POST&apos;,</div><div class="line">headers: &#123;</div><div class="line">&apos;Accept&apos;: &apos;application/json&apos;,</div><div class="line">&apos;Content-Type&apos;: &apos;application/json&apos;,</div><div class="line">&#125;,</div><div class="line">body: JSON.stringify(&#123;</div><div class="line">firstParam: &apos;yourValue&apos;,</div><div class="line">secondParam: &apos;yourOtherValue&apos;,</div><div class="line">&#125;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>Take a look at the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request" target="_blank" rel="external">Fetch Request docs</a> for a full list of properties.</p>
+<p>Handling the response </p>
+<p>The above examples show how you can make a request. In many cases, you will want to do something with the response.</p>
+<p>Networking is an inherently asynchronous operation. Fetch methods will return a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="external">Promise</a> that makes it straightforward to write code that works in an asynchronous manner:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">function getMoviesFromApiAsync() &#123;</div><div class="line">return fetch(&apos;https://facebook.github.io/react-native/movies.json&apos;)</div><div class="line">.then((response) =&gt; response.json())</div><div class="line">.then((responseJson) =&gt; &#123;</div><div class="line">return responseJson.movies;</div><div class="line">&#125;)</div><div class="line">.catch((error) =&gt; &#123;</div><div class="line">console.error(error);</div><div class="line">&#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>You can also use the proposed ES2017 async/await syntax in a React Native app:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">async function getMoviesFromApi() &#123;</div><div class="line">try &#123;</div><div class="line">let response = await fetch(&apos;https://facebook.github.io/react-native/movies.json&apos;);</div><div class="line">let responseJson = await response.json();</div><div class="line">return responseJson.movies;</div><div class="line">&#125; catch(error) &#123;</div><div class="line">console.error(error);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Don’t forget to catch any errors that may be thrown by fetch, otherwise they will be dropped silently.</p>
+<blockquote>
+<p>By default, iOS will block any request that’s not encrypted using SSL. If you need to fetch from a cleartext URL (one that begins with http) you will first need to add an App Transport Security exception. If you know ahead of time what domains you will need access to, it is more secure to add exceptions just for those domains; if the domains are not known until runtime you can <a href="https://facebook.github.io/react-native/docs/integration-with-existing-apps.html#app-transport-security" target="_blank" rel="external">disable ATS completely</a>. Note however that from January 2017, <a href="https://forums.developer.apple.com/thread/48979" target="_blank" rel="external">Apple’s App Store review will require reasonable justification for disabling ATS</a>. See <a href="https://developer.apple.com/library/ios/documentation/General/Reference/InfoPlistKeyReference/Articles/CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW33" target="_blank" rel="external">Apple’s documentation</a> for more information.</p>
+</blockquote>
+<h3 id="Using-Other-Networking-Libraries"><a href="#Using-Other-Networking-Libraries" class="headerlink" title="Using Other Networking Libraries"></a>Using Other Networking Libraries</h3><p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest" target="_blank" rel="external">XMLHttpRequest API</a> is built in to React Native. This means that you can use third party libraries such as <a href="https://github.com/niftylettuce/frisbee" target="_blank" rel="external">frisbee</a> or <a href="https://github.com/mzabriskie/axios" target="_blank" rel="external">axios</a> that depend on it, or you can use the XMLHttpRequest API directly if you prefer.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">var request = new XMLHttpRequest();</div><div class="line">request.onreadystatechange = (e) =&gt; &#123;</div><div class="line">if (request.readyState !== 4) &#123;</div><div class="line">return;</div><div class="line">&#125;</div><div class="line"></div><div class="line">if (request.status === 200) &#123;</div><div class="line">console.log(&apos;success&apos;, request.responseText);</div><div class="line">&#125; else &#123;</div><div class="line">console.warn(&apos;error&apos;);</div><div class="line">&#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">request.open(&apos;GET&apos;, &apos;https://mywebsite.com/endpoint/&apos;);</div><div class="line">request.send();</div></pre></td></tr></table></figure>
+<blockquote>
+<p>The security model for XMLHttpRequest is different than on web as there is no concept of CORS in native apps.</p>
+</blockquote>
+<h3 id="WebSocket-Support"><a href="#WebSocket-Support" class="headerlink" title="WebSocket Support"></a>WebSocket Support</h3><p>React Native also supports<a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket" target="_blank" rel="external">WebSockets</a> , a protocol which provides full-duplex communication channels over a single TCP connection.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">var ws = new WebSocket(&apos;ws://host.com/path&apos;);</div><div class="line"></div><div class="line">ws.onopen = () =&gt; &#123;</div><div class="line">// connection opened</div><div class="line"></div><div class="line">ws.send(&apos;something&apos;); // send a message</div><div class="line">&#125;;</div><div class="line"></div><div class="line">ws.onmessage = (e) =&gt; &#123;</div><div class="line">// a message was received</div><div class="line">console.log(e.data);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">ws.onerror = (e) =&gt; &#123;</div><div class="line">// an error occurred</div><div class="line">console.log(e.message);</div><div class="line">&#125;;</div><div class="line"></div><div class="line">ws.onclose = (e) =&gt; &#123;</div><div class="line">// connection closed</div><div class="line">console.log(e.code, e.reason);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>Your app can now display all sorts of data and you may soon need to organize this content into several screens. To manage the transition between these screens, you will need to learn about <a href="https://facebook.github.io/react-native/docs/using-navigators.html" target="_blank" rel="external">navigators</a>.</p>
+<h2 id="More-Resources"><a href="#More-Resources" class="headerlink" title="More Resources"></a>More Resources</h2><p>If you just read through this website, you should be able to build a pretty cool React Native app. But React Native isn’t just a product made by one company - it’s a community of thousands of developers. So if you’re interested in React Native, here’s some related stuff you might want to check out.</p>
+<h3 id="Popular-Libraries"><a href="#Popular-Libraries" class="headerlink" title="Popular Libraries"></a>Popular Libraries</h3><p>If you’re using React Native, you probably already know about <a href="https://facebook.github.io/react/" target="_blank" rel="external">React</a>. So I feel a bit silly mentioning this. But if you haven’t, check out React - it’s the best way to build a modern website.</p>
+<p>One common question is how to handle the “state” of your React Native application. The most popular library for this is <a href="http://redux.js.org/" target="_blank" rel="external">Redux</a>. Don’t be afraid of how often Redux uses the word “reducer” - it’s a pretty simple library, and there’s also a nice <a href="https://egghead.io/courses/getting-started-with-redux" target="_blank" rel="external">series of videos</a> explaining it.</p>
+<p>If you’re looking for a library that does a specific thing, check out <a href="https://github.com/jondot/awesome-react-native" target="_blank" rel="external">Awesome React Native</a>, a curated list of components that also has demos, articles, and other stuff.</p>
+<h3 id="Example-Apps"><a href="#Example-Apps" class="headerlink" title="Example Apps"></a>Example Apps</h3><p>There are a lot of example apps at the <a href="https://rnplay.org/apps/picks" target="_blank" rel="external">React Native Playground</a>. You can see the code running on a real device, which is a neat feature.</p>
+<p>The folks who built the app for Facebook’s F8 conference in 2016 also <a href="https://github.com/fbsamples/f8app" target="_blank" rel="external">open-sourced the code</a> and wrote up a <a href="http://makeitopen.com/tutorials/building-the-f8-app/planning/" target="_blank" rel="external">detailed series of tutorials</a>. This is useful if you want a more in-depth example that’s more realistic than most sample apps out there.</p>
+<h3 id="Development-Tools"><a href="#Development-Tools" class="headerlink" title="Development Tools"></a>Development Tools</h3><p><a href="https://nuclide.io/" target="_blank" rel="external">Nuclide</a> is the IDE that Facebook uses internally for React Native development. The killer feature of Nuclide is its debugging ability. It also has great inline Flow support.</p>
+<p><a href="https://github.com/infinitered/ignite" target="_blank" rel="external">Ignite</a> is a starter kit that uses Redux and a few different common UI libraries. It has a CLI to generate apps, components, and containers. If you like all of the individual tech choices, Ignite could be perfect for you.</p>
+<p><a href="https://microsoft.github.io/code-push/" target="_blank" rel="external">CodePush</a> is a service from Microsoft that makes it easy to deploy live updates to your React Native app. If you don’t like going through the app store process to deploy little tweaks, and you also don’t like setting up your own backend, give CodePush a try.</p>
+<p><a href="http://docs.getexponent.com/versions/v6.0.0/index.html" target="_blank" rel="external">Exponent</a> is a development environment plus application that focuses on letting you build React Native apps in the Exponent development environment, without ever touching Xcode or Android Studio. If you wish React Native was even more JavaScripty and webby, check out Exponent.</p>
+<p><a href="https://www.decosoftware.com/" target="_blank" rel="external">Deco</a> is an all-in-one development environment specifically designed for React Native. It can automatically set up a new project, search for open source components, and insert them. You can also tweak your app graphically in real time. Check it out if you use macOS.</p>
+<h3 id="Where-React-Native-People-Hang-Out"><a href="#Where-React-Native-People-Hang-Out" class="headerlink" title="Where React Native People Hang Out"></a>Where React Native People Hang Out</h3><p>The <a href="https://www.facebook.com/groups/react.native.community" target="_blank" rel="external">React Native Community</a> Facebook group has thousands of developers, and it’s pretty active. Come there to show off your project, or ask how other people solved similar problems.</p>
+<p><a href="https://discord.gg/0ZcbPKXt5bZjGY5n" target="_blank" rel="external">Reactiflux</a> is a Discord chat where a lot of React-related discussion happens, including React Native. Discord is just like Slack except it works better for open source projects with a zillion contributors. Check out the #react-native channel.</p>
+<p>The <a href="https://twitter.com/reactjs" target="_blank" rel="external">React Twitter account</a> covers both React and React Native. Follow the React Native <a href="https://twitter.com/reactnative" target="_blank" rel="external">Twitter account</a> and <a href="https://facebook.github.io/react-native/blog/" target="_blank" rel="external">blog</a> to find out what’s happening in the world of React Native.</p>
+<p>There are a lot of <a href="http://www.meetup.com/topics/react-native/" target="_blank" rel="external">React Native Meetups</a> that happen around the world. Often there is React Native content in React meetups as well.</p>
+<p>Sometimes we have React conferences. We posted the <a href="https://www.youtube.com/playlist?list=PLb0IAmt7-GS0M8Q95RIc2lOM6nc77q1IY" target="_blank" rel="external">videos from React.js Conf 2016</a>, and we’ll probably have more conferences in the future, too. Stay tuned.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/12/flexbox布局/" rel="prev" title="flexbox布局">
+                flexbox布局 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODA5MC80NjYz"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="sweetjk" />
+          <p class="site-author-name" itemprop="name">sweetjk</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#React-Native-参考官方文档"><span class="nav-number">1.</span> <span class="nav-text">React Native 参考官方文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tutorial"><span class="nav-number">1.1.</span> <span class="nav-text">Tutorial</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HelloWorld"><span class="nav-number">1.1.1.</span> <span class="nav-text">HelloWorld</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#What’s-going-on-here"><span class="nav-number">1.1.2.</span> <span class="nav-text">What’s going on here?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Component-and-AppRegistry"><span class="nav-number">1.1.3.</span> <span class="nav-text">Component and AppRegistry</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#异步执行"><span class="nav-number">1.1.4.</span> <span class="nav-text">异步执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#触摸处理"><span class="nav-number">1.1.5.</span> <span class="nav-text">触摸处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#React-与-React-Native"><span class="nav-number">1.2.</span> <span class="nav-text">React 与 React Native</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#props"><span class="nav-number">1.3.</span> <span class="nav-text">props</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State"><span class="nav-number">1.4.</span> <span class="nav-text">State</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#style"><span class="nav-number">1.5.</span> <span class="nav-text">style</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Height-and-Width"><span class="nav-number">1.6.</span> <span class="nav-text">Height and Width</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Fixed-Dimensions"><span class="nav-number">1.6.0.1.</span> <span class="nav-text">Fixed Dimensions</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flex-Dimensions"><span class="nav-number">1.6.0.2.</span> <span class="nav-text">Flex Dimensions</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Layout-with-Flexbox"><span class="nav-number">1.7.</span> <span class="nav-text">Layout with Flexbox</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Handling-Text-Input"><span class="nav-number">1.8.</span> <span class="nav-text">Handling Text Input</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ScrollView"><span class="nav-number">1.9.</span> <span class="nav-text">ScrollView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ListView"><span class="nav-number">1.10.</span> <span class="nav-text">ListView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NetWorking"><span class="nav-number">1.11.</span> <span class="nav-text">NetWorking</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Fetch"><span class="nav-number">1.11.1.</span> <span class="nav-text">Using Fetch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Using-Other-Networking-Libraries"><span class="nav-number">1.11.2.</span> <span class="nav-text">Using Other Networking Libraries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WebSocket-Support"><span class="nav-number">1.11.3.</span> <span class="nav-text">WebSocket Support</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More-Resources"><span class="nav-number">1.12.</span> <span class="nav-text">More Resources</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Popular-Libraries"><span class="nav-number">1.12.1.</span> <span class="nav-text">Popular Libraries</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example-Apps"><span class="nav-number">1.12.2.</span> <span class="nav-text">Example Apps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Development-Tools"><span class="nav-number">1.12.3.</span> <span class="nav-text">Development Tools</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Where-React-Native-People-Hang-Out"><span class="nav-number">1.12.4.</span> <span class="nav-text">Where React Native People Hang Out</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sweetjk</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("sgmA3EQPtE8cA5uff67BCcHe-gzGzoHsz", "NxK1yGhS44X2peFs1rkSnvdd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
