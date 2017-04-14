@@ -94,7 +94,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/04/14/RN基础/index.html">
 <meta property="og:site_name" content="sweetjk">
 <meta property="og:description" content="React Native 参考官方文档TutorialReact Native is like React, but it uses native components instead of web components as building blocks. So to understand the basic structure of a React Native app, you need">
-<meta property="og:updated_time" content="2017-04-14T06:55:29.000Z">
+<meta property="og:updated_time" content="2017-04-14T07:01:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="RN基础">
 <meta name="twitter:description" content="React Native 参考官方文档TutorialReact Native is like React, but it uses native components instead of web components as building blocks. So to understand the basic structure of a React Native app, you need">
@@ -424,7 +424,9 @@
 <p>The AppRegistry just tells React Native which component is the root one for the whole application. You won’t be thinking about AppRegistry a lot - there will probably just be one call to AppRegistry.registerComponent in your whole app. It’s included in these examples so you can paste the whole thing into your index.ios.js or index.android.js file and get it running.</p>
 <blockquote>
 <p>React Native 的重点是改变视图代码编写的方式</p>
-<h3 id="异步执行"><a href="#异步执行" class="headerlink" title="异步执行"></a>异步执行</h3><p>JavaScript 应用代码和原生平台之间所有的操作都是异步执行，并且原生模块也可以使用额外线程。这意味着我 们可以解码主线程图像，并将其在后台保存至磁盘，在不阻塞 UI 的情况下进行文本和布局的估量计算，等 等。因此，React Native 应用程序的流畅度和响应性都非常好。通信也是完全可序列化的，当运行完整的应用程 序时，这允许我们使用 Chrome Developer Tools 来调试 JavaScript，或者在模拟器中，或者在真机上。</p>
+</blockquote>
+<h3 id="异步执行"><a href="#异步执行" class="headerlink" title="异步执行"></a>异步执行</h3><blockquote>
+<p>JavaScript 应用代码和原生平台之间所有的操作都是异步执行，并且原生模块也可以使用额外线程。这意味着我 们可以解码主线程图像，并将其在后台保存至磁盘，在不阻塞 UI 的情况下进行文本和布局的估量计算，等 等。因此，React Native 应用程序的流畅度和响应性都非常好。通信也是完全可序列化的，当运行完整的应用程 序时，这允许我们使用 Chrome Developer Tools 来调试 JavaScript，或者在模拟器中，或者在真机上。</p>
 <h3 id="触摸处理"><a href="#触摸处理" class="headerlink" title="触摸处理"></a>触摸处理</h3><p>iOS 有一个非常强大的系统称为 Responder Chain，可以用来响应复杂视图层级中的事件，但是在 Web 中并没有 类似功能的工具。React Native 可实现类似的响应系统并提供高水平的组件，比如 TouchableHighlight，无需 额外配置即可与滚动视图和其他元素适度整合。</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">var React = require(&apos;react-native&apos;);</div><div class="line">var &#123; ScrollView, TouchableHighlight, Text &#125; = React;</div><div class="line">var TouchDemo = React.createClass(&#123;</div><div class="line">render: function() &#123;</div><div class="line">return (</div><div class="line">&lt;ScrollView&gt;</div><div class="line">&lt;TouchableHighlight onPress=&#123;() =&gt; console.log(&apos;pressed&apos;)&#125;&gt;</div><div class="line">&lt;Text&gt;Proper Touch Handling&lt;/Text&gt;</div><div class="line">&lt;/TouchableHighlight&gt;</div><div class="line">&lt;/ScrollView&gt;</div><div class="line">);</div><div class="line">&#125;, &#125;);</div></pre></td></tr></table></figure>
