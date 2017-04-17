@@ -1,0 +1,998 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="GuidesIntegration With Existing Apps （集成到已存在的app上）Platform:Objective-C Key Concepts （核心概念）React Native is great when you are starting a new mobile app from scratch. However, it also works well for add">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RN之集成到现有iOS项目">
+<meta property="og:url" content="http://yoursite.com/2017/04/17/RN之集成到现有iOS项目/index.html">
+<meta property="og:site_name" content="sweetjk">
+<meta property="og:description" content="GuidesIntegration With Existing Apps （集成到已存在的app上）Platform:Objective-C Key Concepts （核心概念）React Native is great when you are starting a new mobile app from scratch. However, it also works well for add">
+<meta property="og:image" content="https://facebook.github.io/react-native/img/react-native-existing-app-integration-ios-before.png">
+<meta property="og:image" content="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-link.png">
+<meta property="og:image" content="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-wire-up.png">
+<meta property="og:image" content="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-example-home-screen.png">
+<meta property="og:image" content="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-example-high-scores.png">
+<meta property="og:updated_time" content="2017-04-17T04:25:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RN之集成到现有iOS项目">
+<meta name="twitter:description" content="GuidesIntegration With Existing Apps （集成到已存在的app上）Platform:Objective-C Key Concepts （核心概念）React Native is great when you are starting a new mobile app from scratch. However, it also works well for add">
+<meta name="twitter:image" content="https://facebook.github.io/react-native/img/react-native-existing-app-integration-ios-before.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'A08VNNLS62',
+      apiKey: '46ff6516efd9f6fb932c001f52a6403f',
+      indexName: 'Git',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/17/RN之集成到现有iOS项目/"/>
+
+
+
+
+
+  <title> RN之集成到现有iOS项目 | sweetjk </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sweetjk</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/17/RN之集成到现有iOS项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sweetjk">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sweetjk">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                RN之集成到现有iOS项目
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-17T12:24:15+08:00">
+                2017-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/17/RN之集成到现有iOS项目/" class="leancloud_visitors" data-flag-title="RN之集成到现有iOS项目">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Guides"><a href="#Guides" class="headerlink" title="Guides"></a>Guides</h1><h2 id="Integration-With-Existing-Apps-（集成到已存在的app上）"><a href="#Integration-With-Existing-Apps-（集成到已存在的app上）" class="headerlink" title="Integration With Existing Apps （集成到已存在的app上）"></a>Integration With Existing Apps （集成到已存在的app上）</h2><p><strong>Platform:Objective-C</strong></p>
+<h3 id="Key-Concepts-（核心概念）"><a href="#Key-Concepts-（核心概念）" class="headerlink" title="Key Concepts （核心概念）"></a>Key Concepts （核心概念）</h3><p>React Native is great when you are starting a new mobile app from scratch. However, it also works well for adding a single view or user flow to existing native applications. With a few steps, you can add new React Native based features, screens, views, etc.</p>
+<p>当你重头开始一个新的项目的时候React Native 是伟大的。然而，它也可以为现有的本地应用程序添加单个视图或用户流。通过几个步骤，您可以基于本机的功能、屏幕、视图等等添加React Native。</p>
+<p>The keys to integrating React Native components into your iOS application are to:</p>
+<p>将React Native 组件集成到iOS应用程序的关键是：<br>1.Understand what React Native components you want to integrate.<br>了解你想要集成的React Native 组件</p>
+<p>2.Create a Podfile with subspecs for all the React Native components you will need for your integration.<br>创建一个对所有React Native组件管理的描述文件 subspecs podfile</p>
+<p>3.Create your actual React Native components in JavaScript.<br>在JavaScript中创建具体的React Native 组件</p>
+<p>4.Add a new event handler that creates a RCTRootView that points to<br>your React Native component and its AppRegistry name that you defined in index.ios.js.<br>添加一个事件处理程序用来创建一个RCTRootView 指定 React Native 组件 并在index.ios.js中定义 AppRegistry 的名字</p>
+<p>5.Start the React Native server and run your native application.<br>启动Rect Native 服务 ，运用你的程序</p>
+<p>6.Optionally add more React Native components.<br>可选添加更多的ReactNative组件。</p>
+<p>7.Debug.<br>调试</p>
+<p>8.Prepare for deployment (e.g., via the react-native-xcode.sh script).<br>准备部署（例如，通过react-native-xcode.sh脚本</p>
+<p>9.Deploy and Profit!<br>部署和Profit</p>
+<a id="more"></a>
+<h3 id="Prerequisites-（前提准备）"><a href="#Prerequisites-（前提准备）" class="headerlink" title="Prerequisites （前提准备）"></a>Prerequisites （前提准备）</h3><h4 id="General-（一般情况下）"><a href="#General-（一般情况下）" class="headerlink" title="General （一般情况下）"></a>General （一般情况下）</h4><p>First, follow the <a href="https://facebook.github.io/react-native/docs/getting-started.html" target="_blank" rel="external">Getting Started guide</a> for your development environment and the iOS target platform to install the prerequisites for React Native.</p>
+<p>首先，根据<a href="https://facebook.github.io/react-native/docs/getting-started.html" target="_blank" rel="external">Getting Started guide</a>来配置ReactNative 在iOS平台上的开发环境</p>
+<p>首先，</p>
+<blockquote>
+<p>To ensure a smooth experience, make sure your iOS project is under $root/ios.</p>
+<p>为了确保顺利的进行，确保你的iOS项目是在$root/ios路径下</p>
+</blockquote>
+<h4 id="CocoaPods"><a href="#CocoaPods" class="headerlink" title="CocoaPods"></a>CocoaPods</h4><p><a href="http://cocoapods.org/" target="_blank" rel="external">CocoaPods </a> is a package management tool for iOS and Mac development. We use it to add the actual React Native framework code locally into your current project.</p>
+<p><a href="http://cocoapods.org/" target="_blank" rel="external">CocoaPods </a> 是iOS和Mac开发一个管理三方库的工具。在您当前的项目里我们使用它来添加和管理React Native framework 的代码代码 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo gem install cocoapods</div></pre></td></tr></table></figure>
+<blockquote>
+<p>It is technically possible not to use CocoaPods, but this requires manual library and linker additions that overly complicates this process.(这在技术上是可能不使用CocoaPods，但这需要手动添加库链接的过程过于复杂。)</p>
+</blockquote>
+<h4 id="Our-Sample-App"><a href="#Our-Sample-App" class="headerlink" title="Our Sample App"></a>Our Sample App</h4><p>Assume the <a href="https://github.com/JoelMarcey/iOS-2048" target="_blank" rel="external">app for integration</a> is a <a href="https://en.wikipedia.org/wiki/2048_%28video_game%29" target="_blank" rel="external">2048</a> game. Here is what the main menu of the native application looks like without React Native.</p>
+<div align="center"><br><img src="https://facebook.github.io/react-native/img/react-native-existing-app-integration-ios-before.png" alt=""><br></div>
+
+<h4 id="Package-Dependencies"><a href="#Package-Dependencies" class="headerlink" title="Package Dependencies"></a>Package Dependencies</h4><p>React Native integration requires both the React and React Native node modules. The React Native Framework will provide the code to allow your application integration to happen</p>
+<p>React Native 集成需要 React 和 ReactNative 的节点模块。React Native Framework 将提供代码允许应用集成。</p>
+<h4 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h4><p>We will add the package dependencies to a package.json file. Create this file in the root of your project if it does not exist.</p>
+<blockquote>
+<p>Normally with React Native projects, you will put files like package.json, index.ios.js, etc. in the root directory of your project and then have your iOS specific native code in a subdirectory like ios/ where your Xcode project is located (e.g., .xcodeproj).</p>
+<p>通常对于React Native 的应用， 你将需要把package.json ,index.ios.js,等等 放在应用的根目录下，然后您的iOS 特殊的本地代码放在子目录ios/ 下 即 您的Xcode 项目的位置</p>
+</blockquote>
+<p>Below is an example of what your package.json file should minimally contain.</p>
+<blockquote>
+<p>Version numbers will vary according to your needs. Normally the latest versions for both React and React Native will be sufficient.<br>(版本号根据您的需要有所不同，通常React和React Native的最新版本是足够的)。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">&quot;name&quot;: &quot;NumberTileGame&quot;,</div><div class="line">&quot;version&quot;: &quot;0.0.1&quot;,</div><div class="line">&quot;private&quot;: true,</div><div class="line">&quot;scripts&quot;: &#123;</div><div class="line">&quot;start&quot;: &quot;node node_modules/react-native/local-cli/cli.js start&quot;</div><div class="line">&#125;,</div><div class="line">&quot;dependencies&quot;: &#123;</div><div class="line">&quot;react&quot;: &quot;15.0.2&quot;,</div><div class="line">&quot;react-native&quot;: &quot;0.26.1&quot;</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Packages-Installation-安装包"><a href="#Packages-Installation-安装包" class="headerlink" title="Packages Installation (安装包)"></a>Packages Installation (安装包)</h4><p>Install the React and React Native modules via the Node package manager. The Node modules will be installed into a node_modules/ directory in the root of your project.</p>
+<p>通过node包管理器安装React和React Nativt 模块。node模块将被安装到你的项目的根目录node_modules。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># From the directory containing package.json project, install the modules</div><div class="line"># The modules will be installed in node_modules/</div><div class="line">$ npm install</div></pre></td></tr></table></figure>
+<h4 id="React-Native-Framework"><a href="#React-Native-Framework" class="headerlink" title="React Native Framework"></a>React Native Framework</h4><p>The React Native Framework was installed as Node module in your project above. We will now install a CocoaPods Podfile with the components you want to use from the framework itself.</p>
+<h4 id="Subspecs"><a href="#Subspecs" class="headerlink" title="Subspecs"></a>Subspecs</h4><p>Before you integrate React Native into your application, you will want to decide what parts of the React Native Framework you would like to integrate. That is where subspecs come in. When you create your Podfile, you are going to specify React Native library dependencies that you will want installed so that your application can use those libraries. Each library will become a subspec in the Podfile.</p>
+<p>The list of supported subspecs are in node_modules/react-native/React.podspec. They are generally named by functionality. For example, you will generally always want the Core subspec. That will get you the AppRegistry, StyleSheet, View and other core React Native libraries. If you want to add the React Native Text library (e.g., for <text> elements), then you will need the RCTText subspec. If you want the Image library (e.g., for <image> elements), then you will need the RCTImage subspec.</image></text></p>
+<h4 id="Podfile"><a href="#Podfile" class="headerlink" title="Podfile"></a>Podfile</h4><p>After you have used Node to install the React and React Native frameworks into the node_modules directory, and you have decided on what React Native elements you want to integrate, you are ready to create your Podfile so you can install those components for use in your application.</p>
+<p>The easiest way to create a Podfile is by using the CocoaPods init command in the native iOS code directory of your project:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">## In the directory where your native iOS code is located (e.g., where your `.xcodeproj` file is located)（在ios文件目录下）</div><div class="line">$ pod init</div></pre></td></tr></table></figure>
+<p>The Podfile will be created and saved in the iOS directory (e.g., ios/) of your current project and will contain a boilerplate setup that you will tweak for your integration purposes. In the end, Podfile should look something similar to this:</p>
+<p>Podfile 文件将会在ios/文件目录下被创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"># The target name is most likely the name of your project.</div><div class="line">target &apos;NumberTileGame&apos; do</div><div class="line"></div><div class="line"># Your &apos;node_modules&apos; directory is probably in the root of your project,</div><div class="line"># but if not, adjust the `:path` accordingly</div><div class="line">pod &apos;React&apos;, :path =&gt; &apos;../node_modules/react-native&apos;, :subspecs =&gt; [</div><div class="line">&apos;Core&apos;,</div><div class="line">&apos;RCTText&apos;,</div><div class="line">&apos;RCTNetwork&apos;,</div><div class="line">&apos;RCTWebSocket&apos;, # needed for debugging</div><div class="line"># Add any other subspecs you want to use in your project</div><div class="line">]</div><div class="line"></div><div class="line">end</div></pre></td></tr></table></figure>
+<h4 id="Pod-Installation"><a href="#Pod-Installation" class="headerlink" title="Pod Installation"></a>Pod Installation</h4><p>After you have created your Podfile, you are ready to install the React Native pod.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ pod install</div></pre></td></tr></table></figure>
+<p>Your should see output such as:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">Analyzing dependencies</div><div class="line">Fetching podspec for `React` from `../node_modules/react-native`</div><div class="line">Downloading dependencies</div><div class="line">Installing React (0.26.0)</div><div class="line">Generating Pods project</div><div class="line">Integrating client project</div><div class="line">Sending stats</div><div class="line">Pod installation complete! There are 3 dependencies from the Podfile and 1 total pod installed.</div></pre></td></tr></table></figure>
+<h4 id="Code-Integration"><a href="#Code-Integration" class="headerlink" title="Code Integration"></a>Code Integration</h4><p>Now that we have a package foundation, we will actually modify the native application to integrate React Native into the application. For our 2048 app, we will add a “High Score” screen in React Native.</p>
+<h4 id="The-React-Native-component"><a href="#The-React-Native-component" class="headerlink" title="The React Native component"></a>The React Native component</h4><p>The first bit of code we will write is the actual React Native code for the new “High Score” screen that will be integrated into our application.</p>
+<h4 id="Create-a-index-ios-js-file"><a href="#Create-a-index-ios-js-file" class="headerlink" title="Create a index.ios.js file"></a>Create a index.ios.js file</h4><p>First, create an empty index.ios.js file. For ease, I am doing this in the root of the project.</p>
+<blockquote>
+<p>index.ios.js is the starting point for React Native applications on iOS. And it is always required. It can be a small file that requires other file that are part of your React Native component or application, or it can contain all the code that is needed for it. In our case, we will just put everything in index.ios.js</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># In root of your project</div><div class="line">$ touch index.ios.js</div></pre></td></tr></table></figure>
+<h4 id="Add-Your-React-Native-Code"><a href="#Add-Your-React-Native-Code" class="headerlink" title="Add Your React Native Code"></a>Add Your React Native Code</h4><p>In your index.ios.js, create your component. In our sample here, we will add simple <text> component within a styled <view></view></text></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line">&apos;use strict&apos;;</div><div class="line"></div><div class="line">import React from &apos;react&apos;;</div><div class="line">import &#123;</div><div class="line">AppRegistry,</div><div class="line">StyleSheet,</div><div class="line">Text,</div><div class="line">View</div><div class="line">&#125; from &apos;react-native&apos;;</div><div class="line"></div><div class="line">class RNHighScores extends React.Component &#123;</div><div class="line">render() &#123;</div><div class="line">var contents = this.props[&quot;scores&quot;].map(</div><div class="line">score =&gt; &lt;Text key=&#123;score.name&#125;&gt;&#123;score.name&#125;:&#123;score.value&#125;&#123;&quot;\n&quot;&#125;&lt;/Text&gt;</div><div class="line">);</div><div class="line">return (</div><div class="line">&lt;View style=&#123;styles.container&#125;&gt;</div><div class="line">&lt;Text style=&#123;styles.highScoresTitle&#125;&gt;</div><div class="line">2048 High Scores!</div><div class="line">&lt;/Text&gt;</div><div class="line">&lt;Text style=&#123;styles.scores&#125;&gt;</div><div class="line">&#123;contents&#125;</div><div class="line">&lt;/Text&gt;</div><div class="line">&lt;/View&gt;</div><div class="line">);</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const styles = StyleSheet.create(&#123;</div><div class="line">container: &#123;</div><div class="line">flex: 1,</div><div class="line">justifyContent: &apos;center&apos;,</div><div class="line">alignItems: &apos;center&apos;,</div><div class="line">backgroundColor: &apos;#FFFFFF&apos;,</div><div class="line">&#125;,</div><div class="line">highScoresTitle: &#123;</div><div class="line">fontSize: 20,</div><div class="line">textAlign: &apos;center&apos;,</div><div class="line">margin: 10,</div><div class="line">&#125;,</div><div class="line">scores: &#123;</div><div class="line">textAlign: &apos;center&apos;,</div><div class="line">color: &apos;#333333&apos;,</div><div class="line">marginBottom: 5,</div><div class="line">&#125;,</div><div class="line">&#125;);</div><div class="line"></div><div class="line">// Module name</div><div class="line">AppRegistry.registerComponent(&apos;RNHighScores&apos;, () =&gt; RNHighScores);</div></pre></td></tr></table></figure>
+<blockquote>
+<p>RNHighScores is the name of your module that will be used when you add a view to React Native from within your iOS application.</p>
+</blockquote>
+<h4 id="The-Magic-RCTRootView"><a href="#The-Magic-RCTRootView" class="headerlink" title="The Magic: RCTRootView"></a>The Magic: RCTRootView</h4><p>Now that your React Native component is created via index.ios.js, you need to add that component to a new or existing ViewController. The easiest path to take is to optionally create an event path to your component and then add that component to an existing ViewController.</p>
+<p>We will tie our React Native component with a new native view in the ViewController that will actually host it called RCTRootView .</p>
+<h4 id="Create-an-Event-Path"><a href="#Create-an-Event-Path" class="headerlink" title="Create an Event Path"></a>Create an Event Path</h4><p>You can add a new link on the main game menu to go to the “High Score” React Native page</p>
+<div align="center"><br><img src="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-link.png" alt=""><br></div>
+
+<h4 id="Event-Handler"><a href="#Event-Handler" class="headerlink" title="Event Handler"></a>Event Handler</h4><p>We will now add an event handler from the menu link. A method will be added to the main ViewController of your application. This is where RCTRootView comes into play.</p>
+<p>When you build a React Native application, you use the React Native packager to create an index.ios.bundle that will be served by the React Native server. Inside index.ios.bundle will be our RNHighScore module. So, we need to point our RCTRootView to the location of the index.ios.bundle resource (via NSURL) and tie it to the module.</p>
+<p>We will, for debugging purposes, log that the event handler was invoked. Then, we will create a string with the location of our React Native code that exists inside the index.ios.bundle. Finally, we will create the main RCTRootView. Notice how we provide RNHighScores as the moduleName that we created above when writing the code for our React Native component.</p>
+<p>First import the RCTRootView library.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#import &quot;RCTRootView.h&quot;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>The initialProperties are here for illustration purposes so we have some data for our high score screen. In our React Native component, we will use this.props to get access to that data.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">- (IBAction)highScoreButtonPressed:(id)sender &#123;</div><div class="line">NSLog(@&quot;High Score Button Pressed&quot;);</div><div class="line">NSURL *jsCodeLocation = [NSURL</div><div class="line">URLWithString:@&quot;http://localhost:8081/index.ios.bundle?platform=ios&quot;];</div><div class="line">RCTRootView *rootView =</div><div class="line">[[RCTRootView alloc] initWithBundleURL : jsCodeLocation</div><div class="line">moduleName        : @&quot;RNHighScores&quot;</div><div class="line">initialProperties :</div><div class="line">@&#123;</div><div class="line">@&quot;scores&quot; : @[</div><div class="line">@&#123;</div><div class="line">@&quot;name&quot; : @&quot;Alex&quot;,</div><div class="line">@&quot;value&quot;: @&quot;42&quot;</div><div class="line">&#125;,</div><div class="line">@&#123;</div><div class="line">@&quot;name&quot; : @&quot;Joel&quot;,</div><div class="line">@&quot;value&quot;: @&quot;10&quot;</div><div class="line">&#125;</div><div class="line">]</div><div class="line">&#125;</div><div class="line">launchOptions    : nil];</div><div class="line">UIViewController *vc = [[UIViewController alloc] init];</div><div class="line">vc.view = rootView;</div><div class="line">[self presentViewController:vc animated:YES completion:nil];</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Note that RCTRootView initWithURL starts up a new JSC VM. To save resources and simplify the communication between RN views in different parts of your native app, you can have multiple views powered by React Native that are associated with a single JS runtime. To do that, instead of using [RCTRootView alloc] initWithURL, use RCTBridge initWithBundleURL to create a bridge and then use RCTRootView initWithBridge.</p>
+<p>When moving your app to production, the NSURL can point to a pre-bundled file on disk via something like [[NSBundle mainBundle] URLForResource:@”main” withExtension:@”jsbundle”];. You can use the react-native-xcode.sh script in node_modules/react-native/packager/ to generate that pre-bundled file.</p>
+</blockquote>
+<h4 id="Wire-Up"><a href="#Wire-Up" class="headerlink" title="Wire Up"></a>Wire Up</h4><p>Wire up the new link in the main menu to the newly added event handler method.</p>
+<div align="center"><br><img src="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-wire-up.png" alt=""><br></div>
+
+<blockquote>
+<p>One of the easier ways to do this is to open the view in the storyboard and right click on the new link. Select something such as the Touch Up Inside event, drag that to the storyboard and then select the created method from the list provided.</p>
+</blockquote>
+<h4 id="Test-Your-Integration"><a href="#Test-Your-Integration" class="headerlink" title="Test Your Integration"></a>Test Your Integration</h4><p>You have now done all the basic steps to integrate React Native with your current application. Now we will start the React Native packager to build the index.ios.bundle packager and the server running on localhost to serve it.</p>
+<h4 id="App-Transport-Security"><a href="#App-Transport-Security" class="headerlink" title="App Transport Security"></a>App Transport Security</h4><p>Apple has blocked implicit cleartext HTTP resource loading. So we need to add the following our project’s Info.plist (or equivalent) file.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&lt;key&gt;NSAppTransportSecurity&lt;/key&gt;</div><div class="line">&lt;dict&gt;</div><div class="line">&lt;key&gt;NSExceptionDomains&lt;/key&gt;</div><div class="line">&lt;dict&gt;</div><div class="line">&lt;key&gt;localhost&lt;/key&gt;</div><div class="line">&lt;dict&gt;</div><div class="line">&lt;key&gt;NSTemporaryExceptionAllowsInsecureHTTPLoads&lt;/key&gt;</div><div class="line">&lt;true/&gt;</div><div class="line">&lt;/dict&gt;</div><div class="line">&lt;/dict&gt;</div><div class="line">&lt;/dict&gt;</div></pre></td></tr></table></figure>
+<h4 id="Run-the-Packager"><a href="#Run-the-Packager" class="headerlink" title="Run the Packager"></a>Run the Packager</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># From the root of your project, where the `node_modules` directory is located.</div><div class="line">$ npm start</div></pre></td></tr></table></figure>
+<h4 id="Run-the-App"><a href="#Run-the-App" class="headerlink" title="Run the App"></a>Run the App</h4><p>If you are using Xcode or your favorite editor, build and run your native iOS application as normal. Alternatively, you can run the app from the command line using:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># From the root of your project</div><div class="line">$ react-native run-ios</div></pre></td></tr></table></figure>
+<p>In our sample application, you should see the link to the “High Scores” and then when you click on that you will see the rendering of your React Native component.</p>
+<p>Here is the native application home screen:</p>
+<div align="center"><br><img src="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-example-home-screen.png" alt=""><br></div><br>Here is the React Native high score screen:<br><div align="center"><br><img src="https://facebook.github.io/react-native/img/react-native-add-react-native-integration-example-high-scores.png" alt=""><br></div>
+
+<blockquote>
+<p>If you are getting module resolution issues when running your application please see this GitHub issue for information and possible resolution. This comment seemed to be the latest possible resolution.</p>
+</blockquote>
+<h4 id="See-the-Code"><a href="#See-the-Code" class="headerlink" title="See the Code"></a>See the Code</h4><p>You can examine the code that added the React Native screen on GitHub.</p>
+<h4 id="Creating-a-release-build-in-Android-Studio"><a href="#Creating-a-release-build-in-Android-Studio" class="headerlink" title="Creating a release build in Android Studio"></a>Creating a release build in Android Studio</h4><p>You can use Android Studio to create your release builds too! It’s as easy as creating release builds of your previously-existing native Android app. There’s just one additional step, which you’ll have to do before every release build. You need to execute the following to create a React Native bundle, which’ll be included with your native Android app:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/com/your-company-name/app-package-name/src/main/assets/index.android.bundle --assets-dest android/com/your-company-name/app-package-name/src/main/res/</div></pre></td></tr></table></figure>
+<p>Don’t forget to replace the paths with correct ones and create the assets folder if it doesn’t exist!</p>
+<p>Now just create a release build of your native app from within Android Studio as usual and you should be good to go!</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/14/RN基础/" rel="prev" title="RN基础">
+                RN基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODA5MC80NjYz"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="sweetjk" />
+          <p class="site-author-name" itemprop="name">sweetjk</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Guides"><span class="nav-number">1.</span> <span class="nav-text">Guides</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Integration-With-Existing-Apps-（集成到已存在的app上）"><span class="nav-number">1.1.</span> <span class="nav-text">Integration With Existing Apps （集成到已存在的app上）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Concepts-（核心概念）"><span class="nav-number">1.1.1.</span> <span class="nav-text">Key Concepts （核心概念）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prerequisites-（前提准备）"><span class="nav-number">1.1.2.</span> <span class="nav-text">Prerequisites （前提准备）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#General-（一般情况下）"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">General （一般情况下）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CocoaPods"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">CocoaPods</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Our-Sample-App"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">Our Sample App</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Package-Dependencies"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">Package Dependencies</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#package-json"><span class="nav-number">1.1.2.5.</span> <span class="nav-text">package.json</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Packages-Installation-安装包"><span class="nav-number">1.1.2.6.</span> <span class="nav-text">Packages Installation (安装包)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#React-Native-Framework"><span class="nav-number">1.1.2.7.</span> <span class="nav-text">React Native Framework</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Subspecs"><span class="nav-number">1.1.2.8.</span> <span class="nav-text">Subspecs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Podfile"><span class="nav-number">1.1.2.9.</span> <span class="nav-text">Podfile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pod-Installation"><span class="nav-number">1.1.2.10.</span> <span class="nav-text">Pod Installation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Code-Integration"><span class="nav-number">1.1.2.11.</span> <span class="nav-text">Code Integration</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#The-React-Native-component"><span class="nav-number">1.1.2.12.</span> <span class="nav-text">The React Native component</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Create-a-index-ios-js-file"><span class="nav-number">1.1.2.13.</span> <span class="nav-text">Create a index.ios.js file</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Add-Your-React-Native-Code"><span class="nav-number">1.1.2.14.</span> <span class="nav-text">Add Your React Native Code</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#The-Magic-RCTRootView"><span class="nav-number">1.1.2.15.</span> <span class="nav-text">The Magic: RCTRootView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Create-an-Event-Path"><span class="nav-number">1.1.2.16.</span> <span class="nav-text">Create an Event Path</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Event-Handler"><span class="nav-number">1.1.2.17.</span> <span class="nav-text">Event Handler</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wire-Up"><span class="nav-number">1.1.2.18.</span> <span class="nav-text">Wire Up</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Test-Your-Integration"><span class="nav-number">1.1.2.19.</span> <span class="nav-text">Test Your Integration</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#App-Transport-Security"><span class="nav-number">1.1.2.20.</span> <span class="nav-text">App Transport Security</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Run-the-Packager"><span class="nav-number">1.1.2.21.</span> <span class="nav-text">Run the Packager</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Run-the-App"><span class="nav-number">1.1.2.22.</span> <span class="nav-text">Run the App</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#See-the-Code"><span class="nav-number">1.1.2.23.</span> <span class="nav-text">See the Code</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Creating-a-release-build-in-Android-Studio"><span class="nav-number">1.1.2.24.</span> <span class="nav-text">Creating a release build in Android Studio</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sweetjk</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("sgmA3EQPtE8cA5uff67BCcHe-gzGzoHsz", "NxK1yGhS44X2peFs1rkSnvdd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
