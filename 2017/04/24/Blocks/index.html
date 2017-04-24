@@ -1,0 +1,1026 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Objectvie-C Block block 在 Objective-C开发中应用非常广泛，我们知道block会捕获外部对象，也知道使用block要防止循环引用。“知其然不知所以然“是一件非常痛苦的。那么block这套机制在OC中是如何实现的呢？本文通过从C/C++到汇编层面分析block的实现原理。  Clangclang 是Xcode的编译器前端，编译器前端负责语法分析、语义分析、生成中间代">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blocks">
+<meta property="og:url" content="http://yoursite.com/2017/04/24/Blocks/index.html">
+<meta property="og:site_name" content="sweetjk">
+<meta property="og:description" content="Objectvie-C Block block 在 Objective-C开发中应用非常广泛，我们知道block会捕获外部对象，也知道使用block要防止循环引用。“知其然不知所以然“是一件非常痛苦的。那么block这套机制在OC中是如何实现的呢？本文通过从C/C++到汇编层面分析block的实现原理。  Clangclang 是Xcode的编译器前端，编译器前端负责语法分析、语义分析、生成中间代">
+<meta property="og:image" content="http://yoursite.com/2017/04/24/Blocks/Blocks/block1.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/24/Blocks/Blocks/block2.png">
+<meta property="og:image" content="http://yoursite.com/2017/04/24/Blocks/Blocks/block3.png">
+<meta property="og:updated_time" content="2017-04-24T04:19:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Blocks">
+<meta name="twitter:description" content="Objectvie-C Block block 在 Objective-C开发中应用非常广泛，我们知道block会捕获外部对象，也知道使用block要防止循环引用。“知其然不知所以然“是一件非常痛苦的。那么block这套机制在OC中是如何实现的呢？本文通过从C/C++到汇编层面分析block的实现原理。  Clangclang 是Xcode的编译器前端，编译器前端负责语法分析、语义分析、生成中间代">
+<meta name="twitter:image" content="http://yoursite.com/2017/04/24/Blocks/Blocks/block1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'A08VNNLS62',
+      apiKey: '46ff6516efd9f6fb932c001f52a6403f',
+      indexName: 'Git',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/24/Blocks/"/>
+
+
+
+
+
+  <title> Blocks | sweetjk </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">sweetjk</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/24/Blocks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sweetjk">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="sweetjk">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Blocks
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-24T12:16:42+08:00">
+                2017-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/24/Blocks/" class="leancloud_visitors" data-flag-title="Blocks">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Objectvie-C-Block"><a href="#Objectvie-C-Block" class="headerlink" title="Objectvie-C Block"></a>Objectvie-C Block</h1><blockquote>
+<p>block 在 Objective-C开发中应用非常广泛，我们知道block会捕获外部对象，也知道使用block要防止循环引用。<br>“知其然不知所以然“是一件非常痛苦的。那么block这套机制在OC中是如何实现的呢？本文通过从C/C++到汇编层面分析block的实现原理。</p>
+</blockquote>
+<h2 id="Clang"><a href="#Clang" class="headerlink" title="Clang"></a>Clang</h2><p>clang 是Xcode的编译器前端，编译器前端负责语法分析、语义分析、生成中间代码。</p>
+<p>比如当你再xcode中进行build一个.m 文件的时候，实际的编译命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">clang -x objective-c -arch x86_64</div><div class="line">-fmessage-length=0 </div><div class="line">-fobjc-arc... </div><div class="line">-Wno-missing-field-initializers ... </div><div class="line">-DDEBUG=1 ... </div><div class="line">-isysroot iPhoneSimulator10.1.sdk </div><div class="line">-fasm-blocks ... </div><div class="line">-I headers.hmap </div><div class="line">-F 所需要的Framework  </div><div class="line">-iquote 所需要的Framework  ... </div><div class="line">-c ViewController.m </div><div class="line">-o ViewController.o</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>Objective-C 也可以用GCC来编译，本文不做讲解。</p>
+<p>clang除了能够进行编译以外，还有其他的一些用法。比如本文分析代码的核心命令就是这个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ clang -rewrite-objc 文件.m</div></pre></td></tr></table></figure></p>
+<p>通过这个命令，我们可以把Objective-C的代码用C++表示.<br>对于想深入理解clang命令同学，可以用明令行自带的工具来查看帮助文档<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ man clang</div></pre></td></tr></table></figure></p>
+<p>或者阅读<a href="http://clang.llvm.org/" target="_blank" rel="external">clang官方文档</a>.</p>
+<h3 id="查看汇编代码"><a href="#查看汇编代码" class="headerlink" title="查看汇编代码"></a>查看汇编代码</h3><p>在Xcode中，对于一个源文件，我们可以通过如下方式查看其汇编代码。这对于我们分析代码深层次的实现原理非常有用，这个在后面也可以看到。</p>
+<div align="center"><br><img src="/2017/04/24/Blocks/./Blocks/block1.png" alt=""><br></div>
+
+<h3 id="Objective-C对象内存模型"><a href="#Objective-C对象内存模型" class="headerlink" title="Objective-C对象内存模型"></a>Objective-C对象内存模型</h3><p>为了本文讲解的更清楚，我们首先来看一个Objective-C对象的内存模型。我们首先常见一个类内容如下</p>
+<p>TestClass.h<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@interface TestClass : NSObject</div><div class="line">@property (nonatomic, copy)id prop;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>TestClass.m<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@implementation TestClass</div><div class="line"></div><div class="line">- (void)testFuntion&#123;</div><div class="line"></div><div class="line">TestClass *obj = [[TestClass alloc] init];</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>然后，我们用上文提到的clang命令将TestClass.m 转换成C++的表示<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ clang -rewrite-objc TestClass.m</div></pre></td></tr></table></figure></p>
+<p>当转换完毕当前目录会多一个TestClass.cpp文件，这个文件很大，接近十万行。</p>
+<p>我们先搜索testFunction方法,以此方法作为切入<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static void _I_TestClass_testFunction(TestClass * self, SEL _cmd) &#123;</div><div class="line"></div><div class="line">TestClass *obj = ((TestClass *(*)(id, SEL))(void *)objc_msgSend)((id)((TestClass *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;TestClass&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到，转换成C++后，一个实例方法转换为一个静态方法，这个方法的内容看起来很乱，因为各种类型强制转换，去掉后就比较清楚了。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static void _I_TestClass_testFunction(TestClass * self, SEL _cmd) &#123;</div><div class="line"></div><div class="line">TestClass *obj = objc_msgSend(objc_msgSend(objc_getClass(&quot;TestClass&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到：</p>
+<ul>
+<li>转换后增加了两个参数： self 和 _cmd</li>
+<li>方法的调用换成了objc_msgSend,这是一个C函数,两个参数分别是Class 和 SEL</li>
+</ul>
+<p>到这里，我们知道了一个OC的实例方法具体是怎么实现的了。<br>那么，一个OC对象在内存中是如何存储的呢？我们在刚刚的方法上可以找到这个类的完整实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">struct TestClass_IMPL &#123;</div><div class="line">struct NSObject_IMPL NSObject_IVARS;</div><div class="line">id _prop;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// @property (nonatomic, copy)id prop;</div><div class="line"></div><div class="line">/* @end */</div><div class="line"></div><div class="line"></div><div class="line">// @implementation TestClass</div><div class="line"></div><div class="line"></div><div class="line">static void _I_TestClass_testFunction(TestClass * self, SEL _cmd) &#123;</div><div class="line"></div><div class="line">TestClass *obj = ((TestClass *(*)(id, SEL))(void *)objc_msgSend)((id)((TestClass *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass(&quot;TestClass&quot;), sel_registerName(&quot;alloc&quot;)), sel_registerName(&quot;init&quot;));</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">static id _I_TestClass_prop(TestClass * self, SEL _cmd) &#123; return (*(id *)((char *)self + OBJC_IVAR_$_TestClass$_prop)); &#125;</div><div class="line">extern &quot;C&quot; __declspec(dllimport) void objc_setProperty (id, SEL, long, id, bool, bool);</div><div class="line"></div><div class="line">static void _I_TestClass_setProp_(TestClass * self, SEL _cmd, id prop) &#123; objc_setProperty (self, _cmd, __OFFSETOFIVAR__(struct TestClass, _prop), (id)prop, 0, 1); &#125;</div><div class="line">// @end</div></pre></td></tr></table></figure></p>
+<p>我们侧重来看看类对应的结构体<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">struct TestClass_IMPL &#123;</div><div class="line">struct NSObject_IMPL NSObject_IVARS;</div><div class="line">id _prop;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 依次向上查看结构体定义</div><div class="line"></div><div class="line">struct NSObject_IMPL &#123;</div><div class="line">Class isa;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">typedef struct objc_class *Class;</div><div class="line">struct objc_class &#123;</div><div class="line">Class isa ;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">struct objc_class &#123;</div><div class="line">Class isa  OBJC_ISA_AVAILABILITY;</div><div class="line"></div><div class="line">#if !__OBJC2__</div><div class="line">Class super_class                                        OBJC2_UNAVAILABLE;</div><div class="line">const char *name                                         OBJC2_UNAVAILABLE;</div><div class="line">long version                                             OBJC2_UNAVAILABLE;</div><div class="line">long info                                                OBJC2_UNAVAILABLE;</div><div class="line">long instance_size                                       OBJC2_UNAVAILABLE;</div><div class="line">struct objc_ivar_list *ivars                             OBJC2_UNAVAILABLE;</div><div class="line">struct objc_method_list **methodLists                    OBJC2_UNAVAILABLE;</div><div class="line">struct objc_cache *cache                                 OBJC2_UNAVAILABLE;</div><div class="line">struct objc_protocol_list *protocols                     OBJC2_UNAVAILABLE;</div><div class="line">#endif</div><div class="line"></div><div class="line">&#125; OBJC2_UNAVAILABLE;</div></pre></td></tr></table></figure></p>
+<p>可以看到，OC类实际上是按照以下方式存储对象的</p>
+<ul>
+<li>isa指针。 指向objc_class 类型的结构体，这个结构体存储了方法的列表等类相关的信息，因为objc_msgSend中，发给对象的实际是一个字符串，运行时就是通过isa找到类对象，然后通过字符串找到方法的实际执行的。</li>
+<li>ivar .属性背后的存储对象，到这里也可以看出来一个普通的属性就是ivar+getter+setter。<blockquote>
+<p>也就是说,只要有isa指针，指向一个类对象，那么这个结构就能处理OC的消息机制，也就能当成OC的对象来用。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="Block的本质"><a href="#Block的本质" class="headerlink" title="Block的本质"></a>Block的本质</h3><p>我们修改TestClass.m文件中的内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">typedef void(^VoildBlock)(void);</div><div class="line">@implementation TestClass</div><div class="line"></div><div class="line">- (void)testFunction&#123;</div><div class="line"></div><div class="line">NSInteger variable = 10;</div><div class="line">VoildBlock tmp = ^&#123;</div><div class="line">NSLog(@&quot;%ld&quot;,variable);</div><div class="line">&#125;;</div><div class="line">tmp();</div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>然后，重新用clang转换为C++，有关代码的内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">struct __TestClass__testFunction_block_impl_0 &#123;</div><div class="line">struct __block_impl impl;</div><div class="line">struct __TestClass__testFunction_block_desc_0* Desc;</div><div class="line">NSInteger variable;</div><div class="line">__TestClass__testFunction_block_impl_0(void *fp, struct __TestClass__testFunction_block_desc_0 *desc, NSInteger _variable, int flags=0) : variable(_variable) &#123;</div><div class="line">impl.isa = &amp;_NSConcreteStackBlock;</div><div class="line">impl.Flags = flags;</div><div class="line">impl.FuncPtr = fp;</div><div class="line">Desc = desc;</div><div class="line">&#125;</div><div class="line">&#125;;</div><div class="line">static void __TestClass__testFunction_block_func_0(struct __TestClass__testFunction_block_impl_0 *__cself) &#123;</div><div class="line">NSInteger variable = __cself-&gt;variable; // bound by copy</div><div class="line"></div><div class="line">NSLog((NSString *)&amp;__NSConstantStringImpl__var_folders_c9_vtczmvz10kq_lgl88b4xvhs80000gn_T_TestClass_d8c269_mi_0,variable);</div><div class="line">&#125;</div><div class="line"></div><div class="line">static struct __TestClass__testFunction_block_desc_0 &#123;</div><div class="line">size_t reserved;</div><div class="line">size_t Block_size;</div><div class="line">&#125; __TestClass__testFunction_block_desc_0_DATA = &#123; 0, sizeof(struct __TestClass__testFunction_block_impl_0)&#125;;</div><div class="line"></div><div class="line">static void _I_TestClass_testFunction(TestClass * self, SEL _cmd) &#123;</div><div class="line"></div><div class="line">NSInteger variable = 10;</div><div class="line">VoildBlock tmp = ((void (*)())&amp;__TestClass__testFunction_block_impl_0((void *)__TestClass__testFunction_block_func_0, &amp;__TestClass__testFunction_block_desc_0_DATA, variable));</div><div class="line">((void (*)(__block_impl *))((__block_impl *)tmp)-&gt;FuncPtr)((__block_impl *)tmp);</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">static id _I_TestClass_prop(TestClass * self, SEL _cmd) &#123; return (*(id *)((char *)self + OBJC_IVAR_$_TestClass$_prop)); &#125;</div></pre></td></tr></table></figure></p>
+<p>我们还是以方法作为切入点，看看具体是怎么实现的。_I_TestClass_testFunction是testFunction 转换后的方法。我们去掉一些强制代码，这样看起来更清楚：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">static void _I_TestClass_testFunction(TestClass * self, SEL _cmd) &#123;</div><div class="line">NSInteger variable = 10;</div><div class="line">VoidBlock temp = &amp;__TestClass__testFunction_block_impl_0(__TestClass__testFunction_block_func_0, &amp;__testClass__testFunction_block_desc_0_DATA, variable));</div><div class="line">(temp-&gt;FuncPtr)(temp);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li>初始化一个variable（也就是block捕获的变量）</li>
+<li>调用结构体<strong>testClass</strong>testFunction_block_impl_0的构造函数来新建一个结构体，并且把地址赋值给temp变量（也就是初始化一个block）</li>
+<li>通过调用temp变量内的函数指针（C的函数指针）来执行实际的函数。</li>
+</ul>
+<p>通过分析，我们大概能知道Block的实现</p>
+<blockquote>
+<p>block背后的内存模型实际上是一个结构体，这个结构体会存储一个函数指针来指向block的实际执行代码。</p>
+</blockquote>
+<p>接着，我们来深入的研究下block背后的结构体，也就是这个结构体<strong>TestClass</strong>testFunction_block_impl_0:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">struct __block_impl &#123;</div><div class="line">void *isa; //和上文提到的OC对象isa一样，指向的类对象，用来找到方法的实现</div><div class="line">int Flags; //标识位</div><div class="line">int Reserved; //保留</div><div class="line">void *FuncPtr; //Block对应的函数指针</div><div class="line">&#125;;</div><div class="line"></div><div class="line">struct __TestClass__testFunction_block_impl_0 &#123;</div><div class="line">struct __block_impl impl;</div><div class="line">struct __TestClass__testFunction_block_desc_0* Desc;</div><div class="line">NSInteger variable;</div><div class="line">__TestClass__testFunction_block_impl_0(void *fp, struct __TestClass__testFunction_block_desc_0 *desc, NSInteger _variable, int flags=0) : variable(_variable) &#123;</div><div class="line">impl.isa = &amp;_NSConcreteStackBlock;</div><div class="line">impl.Flags = flags;</div><div class="line">impl.FuncPtr = fp;</div><div class="line">Desc = desc;</div><div class="line">&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>我们回头看看block初始化那句代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//OC</div><div class="line">VoidBlock temp = ^&#123;</div><div class="line">NSLog(@&quot;%ld&quot;,variable);</div><div class="line">&#125;;</div><div class="line">//C++</div><div class="line">VoildBlock tmp = ((void (*)())&amp;__TestClass__testFunction_block_impl_0((void *)__TestClass__testFunction_block_func_0, &amp;__TestClass__testFunction_block_desc_0_DATA, variable));</div><div class="line">((void (*)(__block_impl *))((__block_impl *)tmp)-&gt;FuncPtr)((__block_impl *)tmp);</div></pre></td></tr></table></figure></p>
+<p>在对应之前代码块的构造函数，我们可以清楚的看到，在初始化的时候三个参数一次是</p>
+<ul>
+<li>函数指针 <strong>TestClass</strong>testFunction_block_func_0</li>
+<li>block的描述结构体（全局静态结构体）<strong>TestClass</strong>testFunction_block_desc_0_DATA</li>
+<li>捕获的变量variable</li>
+</ul>
+<p>接着，我们看看block背后的C函数<strong>TestClass</strong>testFunction_block_func_0<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void __TestClass__testFunction_block_func_0(struct __TestClass__testFunction_block_impl_0 *__cself) &#123;</div><div class="line">NSInteger variable = __cself-&gt;variable; // bound by copy</div><div class="line"></div><div class="line">NSLog((NSString *)&amp;__NSConstantStringImpl__var_folders_c9_vtczmvz10kq_lgl88b4xvhs80000gn_T_TestClass_d8c269_mi_0,variable);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Tips:<br>内存中存储区域可分为几个区域：</p>
+<ul>
+<li>TEXT 代码区</li>
+<li>DATA 数据区</li>
+<li>Stack 栈区</li>
+<li>HEAP 堆区</li>
+</ul>
+<p>上文的字符串@”%ld”，对应C++代码是)&amp;<strong>NSConstantStringImpl</strong>var_folders_c9_vtczmvz10kq_lgl88b4xvhs80000gn_T_TestClass<em>d8c269</em><br>mi_0，是存储在数据区的。这样即使程序中有多个@”%ld”，也不会创建多个实例。</p>
+<p>可以看到。这个C函数的参数<br><strong>TestClass</strong>testFunction_block_impl_0，也就是一个block类型。然后在方法体内部，使用这个block 参数。</p>
+<p>最后，我们分析block的描述信息，也就是这段代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static struct __TestClass__testFunction_block_desc_0 &#123;</div><div class="line">size_t reserved;</div><div class="line">size_t Block_size;</div><div class="line">&#125; __TestClass__testFunction_block_desc_0_DATA = &#123; 0, sizeof(struct __TestClass__testFunction_block_impl_0)&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码不难理解，就是声明一个描述信息的结构体，然后初始化这个结构体的全局静态变量。</p>
+<p>分析到这里，上面代码的大多数内容我们都理解了，但是有一点我们还没有搞清楚，就是isa指向的内容_NSConcreteStackBlock<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">impl.isa = &amp;_NSConcreteStackBlock;</div></pre></td></tr></table></figure></p>
+<p>但是，到这里我们知道了为什么Block可以当作OC对象来用的原因：就是这个指向类对象的isa指针。</p>
+<h3 id="Block-类型"><a href="#Block-类型" class="headerlink" title="Block 类型"></a>Block 类型</h3><p>上文提到了_NSConcreteStackBlock是Block一种，block一共有三种类型</p>
+<ul>
+<li>NSConcreteStackBlock 栈上分配，作用域结束后自动释放</li>
+<li>NSConcreteGlobalBlock 全局分配，类似全局变量，存储在数据段，内存中只有一份</li>
+<li>NSConcreteHeapBlock 堆上分配</li>
+</ul>
+<p>我们仍然尝试用Clang转换的方式，来验证我们的理论。将TestClass.m内容修修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">typedef void(^VoildBlock)(void);</div><div class="line"></div><div class="line">@interface TestClass ()</div><div class="line">@property (nonatomic, copy) VoildBlock headBlock;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation TestClass</div><div class="line"></div><div class="line">- (void)testFunction&#123;</div><div class="line"></div><div class="line">VoildBlock stackBlock = ^&#123;&#125;;</div><div class="line">stackBlock();</div><div class="line"></div><div class="line">_headBlock = ^&#123;&#125;;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure>
+<p>然后转成C++之后，分别对应如下</p>
+<p>全局globalBlock<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">impl.isa = &amp;_NSConcreteGlobalBlock;</div></pre></td></tr></table></figure></p>
+<p>栈上stackBlock<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">impl.isa = &amp;_NSConcreteStackBlock;</div></pre></td></tr></table></figure></p>
+<p>属性Block<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">impl.isa = &amp;_NSConcreteStackBlock;</div></pre></td></tr></table></figure></p>
+<p>What the fuck! 怎么属性的block是栈类型的，难道不该是堆类型的吗？</p>
+<p>到这里，C/C++层面的代码已经无法满足我们的需求了。我们试着把代码转成汇编，一探究竟：</p>
+<p>方便分析属性block究竟是怎么回事，我们修改.m文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">#import &quot;TestClass.h&quot;</div><div class="line"></div><div class="line">typedef void(^VoildBlock)(void);</div><div class="line"></div><div class="line">@interface TestClass ()</div><div class="line">@property (nonatomic, copy) VoildBlock headBlock;</div><div class="line">@end</div><div class="line"></div><div class="line">@implementation TestClass</div><div class="line"></div><div class="line">- (void)testFunction&#123;</div><div class="line"></div><div class="line"></div><div class="line">_headBlock = ^&#123;&#125;;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">@end</div></pre></td></tr></table></figure></p>
+<p>转换成汇编后，在方法部分我们看到类似汇编代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">bl	_objc_retainBlock</div><div class="line">movw	r1, :lower16:(_OBJC_IVAR_$_TestClass._headBlock-(LPC0_1+4))</div><div class="line">movt	r1, :upper16:(_OBJC_IVAR_$_TestClass._headBlock-(LPC0_1+4))</div><div class="line">LPC0_1:</div><div class="line">add	r1, pc</div><div class="line">.loc	1 0 0                   @ /Users/apple/git/git_code/Demo1/Demo1/TestClass.m:0:0</div><div class="line">ldr	r2, [sp, #4]</div><div class="line">.loc	1 22 5                  @ /Users/apple/git/git_code/Demo1/Demo1/TestClass.m:22:5</div><div class="line">ldr	r1, [r1]</div><div class="line">add	r1, r2</div><div class="line">.loc	1 22 16 is_stmt 0       @ /Users/apple/git/git_code/Demo1/Demo1/TestClass.m:22:16</div><div class="line">ldr	r2, [r1]</div><div class="line">str	r0, [r1]</div><div class="line">.loc	1 22 16 discriminator 1 @ /Users/apple/git/git_code/Demo1/Demo1/TestClass.m:22:16</div><div class="line">mov	r0, r2</div><div class="line">bl	_objc_release</div></pre></td></tr></table></figure>
+<p>也就是说，在返回方法之前，一次调用了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">_objc_retainBlock</div><div class="line">_objc_release</div></pre></td></tr></table></figure></p>
+<p>那么 _objc_retainBlock 就是block从栈到堆得黑魔法。</p>
+<p>我们通过<a href="https://opensource.apple.com/source/objc4/objc4-706/runtime" target="_blank" rel="external">runtime的源码</a>来分析这个方法的实现：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">id objc_retainBlock(id x) &#123;</div><div class="line">return (id)_Block_copy(x);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// Create a heap based copy of a Block or simply add a reference to an existing one.</div><div class="line">// This must be paired with Block_release to recover memory, even when running</div><div class="line">// under Objective-C Garbage Collection.</div><div class="line">BLOCK_EXPORT void *_Block_copy(const void *aBlock)</div><div class="line">__OSX_AVAILABLE_STARTING(__MAC_10_6, __IPHONE_3_2);</div></pre></td></tr></table></figure></p>
+<p>到这里我们就清楚了，编译器为我们自动插入了 _objc_retainBlock ，而这个函数就是把栈上的block拷贝到堆上。</p>
+<blockquote>
+<p>Tips: 通常在写属性的时候，block都会声明为copy。这是显式的表示，即使block是栈上的，也会拷贝到堆上。其实在赋值的时候，编译器已经自动帮我们做了这些，所以其实使用strong也可以。</p>
+</blockquote>
+<p>那么，一个临时变量的block会被拷贝到堆上么？</p>
+<p>修改testFunction ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">- (void)testFunction&#123;</div><div class="line"></div><div class="line"></div><div class="line">VoidBlock stackBlock = ^&#123;&#125;;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>继续查看汇编：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">Ltmp0:</div><div class="line">.loc	1 22 15 prologue_end    @ /Users/apple/git/git_code/Demo1/Demo1/TestClass.m:22:15</div><div class="line">mov	r0, r2</div><div class="line">bl	_objc_retainBlock</div><div class="line">movs	r1, #0</div><div class="line">mov	r2, sp</div><div class="line">str	r0, [sp]</div><div class="line">.loc	1 24 1                  @ /Users/apple/git/git_code/Demo1/Demo1/TestClass.m:24:1</div><div class="line">mov	r0, r2</div><div class="line">bl	_objc_storeStrong</div><div class="line">add	sp, #12</div><div class="line">pop	&#123;r7, pc&#125;</div></pre></td></tr></table></figure></p>
+<p>我们仍然看到了 _objc_retainBlock ，也就是即使一个函数中的block，在ARC开启的情况下，仍然会拷贝到堆上。</p>
+<h3 id="block"><a href="#block" class="headerlink" title="__block"></a>__block</h3><p>通过之前的研究，我们知道了block如何捕获外部变量，也知道了block的几种类型。那么block如何修改外部变量的呢？</p>
+<p>block 是不可以直接修改外部变量的，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">NSInteger variable = 0;</div><div class="line">_heapBlock = ^&#123;</div><div class="line">variable = 1;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>直接那么写，编译器是不会通过的，想想也简单，因为变量可能在block之前就被释放掉了，直接那么赋值会导致野指针。<br>在OC层面，我们可以通过__block关键字，那么加了这个关键字之后，实际上C++层面的代码时什么样的呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)testFunction&#123;</div><div class="line">__block NSInteger variable = 0;</div><div class="line">VoidBlock stackBlock = ^&#123;</div><div class="line">variable = 1;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在转换成C++代码后，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">static void _I_TestClass_testFunction(TestClass * self, SEL _cmd) &#123;</div><div class="line">__attribute__((__blocks__(byref))) __Block_byref_variable_0 variable = &#123;(void*)0,(__Block_byref_variable_0 *)&amp;variable, 0, sizeof(__Block_byref_variable_0), 0&#125;;</div><div class="line">VoidBlock stackBlock = ((void (*)())&amp;__TestClass__testFunction_block_impl_0((void *)__TestClass__testFunction_block_func_0, &amp;__TestClass__testFunction_block_desc_0_DATA, (__Block_byref_variable_0 *)&amp;variable, 570425344));</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到，__block NSInteger variable = 0转换成了一个结构体</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">__attribute__((__blocks__(byref))) __Block_byref_variable_0 variable = &#123;(void*)0,(__Block_byref_variable_0 *)&amp;variable, 0, sizeof(__Block_byref_variable_0), 0&#125;;</div></pre></td></tr></table></figure>
+<p>这个结构体的定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">struct __Block_byref_variable_0 &#123;</div><div class="line">void *__isa;</div><div class="line">__Block_byref_variable_0 *__forwarding;</div><div class="line">int __flags;</div><div class="line">int __size;</div><div class="line">NSInteger variable; //这个是要修改的变量</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>通过初始化我们可以看到</p>
+<ul>
+<li>__isa指向0</li>
+<li><strong>forwarding 指向</strong>Block_byref_variable_0自身</li>
+<li>__flags为0</li>
+<li>__size就是结构题的大小</li>
+<li><p>variable是我们定义的原始值0<br>到这里，我们有一点疑惑</p>
+</li>
+<li><p>为什么要存在一个__forwarding来指向自身呢？<br>我们来看看block的方法体，也就是这部分</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">^&#123;</div><div class="line">variable = 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>转换成C++后：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static void __DemoClass__demoFunction_block_func_0(struct __DemoClass__demoFunction_block_impl_0 *__cself) &#123;</div><div class="line">__Block_byref_variable_0 *variable = __cself-&gt;variable; // bound by ref</div><div class="line">variable-&gt;__forwarding-&gt;variable) = 1;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>也就是说__forwarding存在的意义就是通过它来访问到变量的地址，如果这个指针一直指向自身，那么它也就没有存在的意义，也就是在将来的某一个时间点，它一定会指向另外一个数据结构。<br>我们在上文中讲到，ARC开启的时候，栈上的block会被复制到堆上。</p>
+<p>在没有复制之前</p>
+<div align="center"><br><img src="/2017/04/24/Blocks/./Blocks/block2.png" alt=""><br></div><br>复制之后<br><div align="center"><br><img src="/2017/04/24/Blocks/./Blocks/block3.png" alt=""><br></div>
+
+<p>这样，我们就清楚原因了：</p>
+<blockquote>
+<p>即使发生了复制，只要修改__forwarding的指向，我们就能够保证栈上和堆上的block都访问同一个对象。</p>
+</blockquote>
+<h3 id="Block-对象捕获"><a href="#Block-对象捕获" class="headerlink" title="Block 对象捕获"></a>Block 对象捕获</h3><p>到这里，我们分析的block都是捕获一个外部值，并不是对象。值和对象最大的区别就是对象有生命周期，对象我们需要考虑引用计数。</p>
+<p>修改testFunction:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">- (void)testFunction&#123;</div><div class="line">NSObject * obj = [[NSObject alloc] init];</div><div class="line">VoidBlock stackBlock = ^&#123;</div><div class="line">[obj description];</div><div class="line">&#125;;</div><div class="line">stackBlock();</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再转换成C++后，我们对比之前捕获NSInteger，发现多了两个生命周期管理函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">static void __TestClass__testFunction_block_copy_0(struct __TestClass__testFunction_block_impl_0*dst, struct __TestClass__testFunction_block_impl_0*src) &#123;_Block_object_assign((void*)&amp;dst-&gt;obj, (void*)src-&gt;obj, 3/*BLOCK_FIELD_IS_OBJECT*/);&#125;</div><div class="line"></div><div class="line">static void __TestClass__testFunction_block_dispose_0(struct __TestClass__testFunction_block_impl_0*src) &#123;_Block_object_dispose((void*)src-&gt;obj, 3/*BLOCK_FIELD_IS_OBJECT*/);&#125;</div></pre></td></tr></table></figure>
+<p>我们再查看下Block_object_assign和Block_object_dispose的定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// Used by the compiler. Do not call this function yourself.</div><div class="line">BLOCK_EXPORT void _Block_object_assign(void *, const void *, const int);</div><div class="line">// Used by the compiler. Do not call this function yourself.</div><div class="line">BLOCK_EXPORT void _Block_object_dispose(const void *, const int);</div></pre></td></tr></table></figure></p>
+<p>也就是说，编译器通过这两个函数来管理Block捕获对象的生命周期。其中</p>
+<ul>
+<li>_Block_object_assign相当于ARC中的reatain，在block从栈上拷贝到堆上的时候调用</li>
+<li>_Block_object_dispose相当于ARC中的release，在block堆上废弃的时候调用</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>block在C语言层面就是结构体，结构体存储了函数指针和捕获的变量列表</li>
+<li>block分为全局，栈上，堆上三种，ARC开启的时候，会自动把栈上的block拷贝到堆上</li>
+<li>__block变量在C语言层面也是一个结构体</li>
+<li>block捕获对象的时候会增加对象的引用计数。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/17/RN之集成到现有iOS项目/" rel="prev" title="RN之集成到现有iOS项目">
+                RN之集成到现有iOS项目 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yODA5MC80NjYz"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="sweetjk" />
+          <p class="site-author-name" itemprop="name">sweetjk</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Objectvie-C-Block"><span class="nav-number">1.</span> <span class="nav-text">Objectvie-C Block</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang"><span class="nav-number">1.1.</span> <span class="nav-text">Clang</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看汇编代码"><span class="nav-number">1.1.1.</span> <span class="nav-text">查看汇编代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Objective-C对象内存模型"><span class="nav-number">1.1.2.</span> <span class="nav-text">Objective-C对象内存模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block的本质"><span class="nav-number">1.1.3.</span> <span class="nav-text">Block的本质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-类型"><span class="nav-number">1.1.4.</span> <span class="nav-text">Block 类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#block"><span class="nav-number">1.1.5.</span> <span class="nav-text">__block</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Block-对象捕获"><span class="nav-number">1.1.6.</span> <span class="nav-text">Block 对象捕获</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.1.7.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sweetjk</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("sgmA3EQPtE8cA5uff67BCcHe-gzGzoHsz", "NxK1yGhS44X2peFs1rkSnvdd");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
